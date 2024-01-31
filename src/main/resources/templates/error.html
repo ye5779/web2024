@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html
+    th:replace="~{layouts/base::html(title=~{::title}, style=~{::style}, main=~{::main})}">
+<head>
+  <title>에러 페이지</title>
+  <style>th {background-color:orangered;}</style>
+</head>
+<body>
+<main>
+  <h3>Error Page</h3>
+  <table class="info">
+    <tr>
+      <th>상태코드</th>
+      <td th:text="${status}">404</td>
+    </tr>
+    <tr>
+      <th>에러</th>
+      <td th:text="${error}">Not Found</td>
+    </tr>
+    <tr>
+      <th>메시지</th>
+      <td th:text="${message}">Message</td>
+    </tr>
+  </table>
+</main>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html
+    th:replace="~{layouts/base::html(title=~{::title}, style=~{::style}, main=~{::main})}">
+<head>
+  <title>회원</title>
+  <style>
+    input[name='redirectUrl'] {width:400px;}
+  </style>
+</head>
+<body>
+<main>
+  <h3>로그인</h3>
+  <form th:action="@{/login}" method="post">
+    <ul class="list">
+      <li><label><input type="text" name="username" placeholder="이메일" required
+          autofocus/></label></li>
+      <li><label><input type="password" name="password" placeholder="비밀번호"
+          required/></label>
+      </li>
+    </ul>
+    <p>
+      <button type="submit">로그인</button>
+      <a th:href="@{/user/signup}">회원가입</a>
+    </p>
+  </form>
+  <p th:if="${param.error}" class="warn">잘못된 사용자 이름과 비빌번호입니다.</p>
+  <p th:if="${param.logout}" class="warn">로그아웃 했습니다.</p>
+</main>
+</body>
+</html>

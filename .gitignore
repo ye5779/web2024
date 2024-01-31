@@ -1,0 +1,6 @@
+.*
+!.gitignore
+build/
+application.properties
+gradle.properties
+src/test/

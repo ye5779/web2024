@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title th:replace="${title}">제목</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" th:href="@{/css/default.css}"/>
+  <style th:replace="${style} ?: ~{}"></style>
+  <script th:replace="${script} ?: ~{}"></script>
+</head>
+<body>
+<header th:replace="${header} ?: _">
+  <ul class="nav">
+    <li><a th:href="@{/}">홈</a></li>
+  </ul>
+</header>
+<main th:replace="${main}"></main>
+</body>
+</html>

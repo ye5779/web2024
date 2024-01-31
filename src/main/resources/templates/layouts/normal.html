@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html th:replace="~{layouts/base::html(header=~{::header})}">
+<body>
+<header>
+  <ul class="nav">
+    <li><a th:href="@{/}">홈</a></li>
+    <li><a th:href="@{/user/users(count=10,page=1)}">회원</a></li>
+    <li><a th:href="@{/post/posts(count=10,page=1)}">포스트</a></li>
+    <li th:unless="${session.user}"><a th:href="@{/user/signin}">로그인</a>
+    </li>
+    <li th:if="${session.user}"><a th:href="@{/user/myInfo}"
+        th:text="|${session.user.name}님|"></a></li>
+  </ul>
+</header>
+</body>
+</html>
