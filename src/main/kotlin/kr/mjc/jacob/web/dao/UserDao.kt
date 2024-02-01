@@ -17,19 +17,18 @@ class UserDao(val jt: NamedParameterJdbcTemplate) {
     "select userId, email, name from user order by userId desc limit :offset, :count"
 
   private val GET_USER =
-    "select userId, email, name from user where userId=:userId"
+    "select userId, email, password, name from user where userId=:userId"
 
-  private val LOGIN =
-    "select userId, email, name from user where email=:email and password=sha2(:password,256)"
+  private val GET_USER_BY_EMAIL =
+    "select userId, email, password, name from user where email=:email"
 
   private val ADD_USER =
-    "insert user(email, password, name) values(:email,sha2(:password,256),:name) returning userId"
+    "insert user(email, password, name) values(:email,:password,:name) returning userId"
 
   private val UPDATE_PASSWORD =
-    "update user set password=sha2(:newPassword,256) where userId=:userId and password=sha2(:password,256)"
+    "update user set password=:password where userId=:userId"
 
-  private val DELETE_USER =
-    "delete from user where userId=:userId and password=sha2(:password,256)"
+  private val DELETE_USER = "delete from user where userId=:userId"
 
   /**
    * resultSet을 user에 자동 매핑하는 매퍼
@@ -47,7 +46,7 @@ class UserDao(val jt: NamedParameterJdbcTemplate) {
   }
 
   /**
-   * 회원정보 조회
+   * 회원번호로 회원정보 조회
    * @param userId 회원번호
    * @return 회원 정보
    */
@@ -57,14 +56,13 @@ class UserDao(val jt: NamedParameterJdbcTemplate) {
   }
 
   /**
-   * 로그인
+   * 이메일로 회원정보 조회
    * @param email    이메일
-   * @param password 비밀번호
    * @return 로그인 성공하면 회원정보, 실패하면 NULL
    */
-  fun login(email: String, password: String): User? {
-    val params = mapOf("email" to email, "password" to password)
-    return jt.queryForObject(LOGIN, params, userMapper)
+  fun getUserByEmail(email: String): User? {
+    val params = mapOf("email" to email)
+    return jt.queryForObject(GET_USER_BY_EMAIL, params, userMapper)
   }
 
   /**
@@ -79,13 +77,11 @@ class UserDao(val jt: NamedParameterJdbcTemplate) {
    * 비밀번호 수정
    *
    * @param userId      회원번호
-   * @param password    현재 비밀번호
-   * @param newPassword 새 비밀번호
+   * @param password    새 비밀번호
    * @return 수정 성공시 1, 회원이 없거나 비밀번호가 틀리면 0
    */
-  fun updatePassword(userId: Int, password: String, newPassword: String): Int {
-    val params = mapOf("userId" to userId, "password" to password,
-        "newPassword" to newPassword)
+  fun updatePassword(userId: Int, password: String): Int {
+    val params = mapOf("userId" to userId, "password" to password)
     return jt.update(UPDATE_PASSWORD, params)
   }
 
@@ -93,11 +89,10 @@ class UserDao(val jt: NamedParameterJdbcTemplate) {
    * 회원 삭제
    *
    * @param userId   회원번호
-   * @param password 비밀번호
    * @return 삭제 성공시 1, 회원번호가 없거나 비밀번호가 틀리면 0
    */
-  fun deleteUser(userId: Int, password: String): Int {
-    val params = mapOf("userId" to userId, "password" to password)
+  fun deleteUser(userId: Int): Int {
+    val params = mapOf("userId" to userId)
     return jt.update(DELETE_USER, params)
   }
 }

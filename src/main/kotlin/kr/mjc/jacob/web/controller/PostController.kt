@@ -52,7 +52,9 @@ class PostController(val postDao: PostDao) {
    * 글보기
    */
   @GetMapping("/post/post")
-  fun post(postId: Int, model: Model) {
+  fun post(postId: Int, @SessionAttribute user: User?, model: Model) {
+    val post = postDao.getPost(postId)
+    if (post?.userId == user?.userId) model.addAttribute("owner", true)
     model.addAttribute("post", postDao.getPost(postId))
   }
 

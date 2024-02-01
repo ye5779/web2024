@@ -5,6 +5,8 @@ import jakarta.servlet.http.HttpSession
 import kr.mjc.jacob.web.dao.Limit
 import kr.mjc.jacob.web.dao.User
 import kr.mjc.jacob.web.dao.UserDao
+import kr.mjc.jacob.web.urlEncoded
+import org.mindrot.jbcrypt.BCrypt
 import org.slf4j.LoggerFactory
 import org.springframework.dao.DataAccessException
 import org.springframework.stereotype.Controller
@@ -12,14 +14,16 @@ import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.SessionAttribute
-import java.net.URLEncoder
-import java.nio.charset.Charset
 
 /**
  * Servlet API를 사용하지 않는 컨트롤러
  */
 @Controller
 class UserController(val userDao: UserDao) {
+
+  companion object {
+    const val LANDING_PAGE = "redirect:/user/users"
+  }
 
   private val log = LoggerFactory.getLogger(this::class.java)
 
@@ -32,51 +36,37 @@ class UserController(val userDao: UserDao) {
   }
 
   /**
-   * 회원가입 화면
-   */
-  @GetMapping("/user/signup")
-  fun signupForm(session: HttpSession) {
-    session.invalidate()
-  }
-
-  /**
    * 회원가입
    */
-  @PostMapping("/user/signup")
+  @PostMapping("/signup")
   fun signup(user: User, session: HttpSession): String {
     try {
-      log.debug("user = {}", user)
+      userDao.getUserByEmail(user.email)  // 이메일이 존재함
+      return "redirect:/signup?error=duplicateemail"
+    } catch (e: DataAccessException) {    // 이메일이 없음
+      user.password = BCrypt.hashpw(user.password, BCrypt.gensalt())
       userDao.addUser(user) // 등록 성공
-      return signin(email = user.email, password = user.password,
-          session = session)
-    } catch (e: DataAccessException) { // 등록 실패
-      log.error(e.cause.toString())
-      return "redirect:/user/signup?mode=FAILURE"
+      session.setAttribute("user", user)
+      return LANDING_PAGE
     }
-  }
-
-  /**
-   * 로그인 화면
-   */
-  @GetMapping("/user/signin")
-  fun signinForm(req: HttpServletRequest, model: Model) {
-    model.addAttribute("referer", req.getHeader("referer"))
-    req.session.invalidate()
   }
 
   /**
    * 로그인
    */
-  @PostMapping("/user/signin")
-  fun signin(email: String, password: String,
-      redirectUrl: String = "/user/users", session: HttpSession): String {
+  @PostMapping("/login")
+  fun login(email: String, password: String, redirectUrl: String,
+      session: HttpSession): String {
     try {
-      val user = userDao.login(email, password) // 로그인 성공
-      session.setAttribute("user", user)
-      return "redirect:$redirectUrl"
-    } catch (e: DataAccessException) { // 로그인 실패
-      return "redirect:/user/signin?mode=FAILURE&redirectUrl=" + URLEncoder.encode(
-          redirectUrl, Charset.defaultCharset())
+      val user = userDao.getUserByEmail(email)
+      return if (BCrypt.checkpw(password, user?.password)) {
+        session.setAttribute("user", user)
+        if (redirectUrl.isBlank()) LANDING_PAGE else "redirect:${redirectUrl}"
+      } else {  // 비밀번호가 매치하지 않을 경우
+        "redirect:/login?error=notmatch&redirectUrl=${redirectUrl.urlEncoded}"
+      }
+    } catch (e: DataAccessException) { // 사용자 정보가 없을 경우
+      return "redirect:/login?error=nouser&redirectUrl=${redirectUrl.urlEncoded}"
     }
   }
 
@@ -84,13 +74,14 @@ class UserController(val userDao: UserDao) {
    * 비밀번호변경
    */
   @PostMapping("/user/password")
-  fun password(@SessionAttribute user: User, password: String,
+  fun password(@SessionAttribute user: User, oldPassword: String,
       newPassword: String): String {
-    val updatedRows = userDao.updatePassword(user.userId, password, newPassword)
-    return if (updatedRows >= 1) // 업데이트 성공
-      "redirect:/user/myInfo"
-    else  // 업데이트 실패
-      "redirect:/user/password?mode=FAILURE"
+    return if (BCrypt.checkpw(oldPassword, user.password)) { // 비밀번호 매치함
+      val hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt())
+      userDao.updatePassword(user.userId, hashedPassword) // DB의 비밀번호 변경
+      user.password = hashedPassword  // 세션의 비밀번호 변경
+      "redirect:/user/me?changed"
+    } else "redirect:/user/password?error=notmatch" // 비밀번호 매치 안함
   }
 
   /**
@@ -104,16 +95,28 @@ class UserController(val userDao: UserDao) {
   /**
    * 로그아웃
    */
-  @GetMapping("/user/signout")
-  fun signout(session: HttpSession): String {
+  @PostMapping("/logout")
+  fun logout(session: HttpSession): String {
     session.invalidate()
-    return "redirect:/user/users"
+    return LANDING_PAGE
+  }
+
+  /**
+   * 해지
+   */
+  @PostMapping("/unregister")
+  fun unregister(session: HttpSession, @SessionAttribute user: User,
+      password: String): String {
+    return if (BCrypt.checkpw(password, user.password)) {
+      userDao.deleteUser(user.userId)
+      logout(session)
+    } else "redirect:/user/me?error=wrongpassword"
   }
 
   /**
    * just forward
    */
-  @GetMapping("/{_:post|user}/**", "/login")
+  @GetMapping("/{_:post|user}/**", "/login", "/signup")
   fun pass(req: HttpServletRequest) {
     log.debug("servletPath = {}", req.servletPath)
   }

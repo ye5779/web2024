@@ -36,6 +36,9 @@ dependencies {
   // owasp java encoder
   implementation("org.owasp.encoder:encoder:1.+")
   implementation("org.owasp.encoder:encoder-jsp:1.+")
+
+  // bcrypt
+  implementation("de.svenkubiak:jBCrypt:+")
 }
 
 tasks.withType<KotlinCompile> {

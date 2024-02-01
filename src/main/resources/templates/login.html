@@ -12,19 +12,21 @@
   <h3>로그인</h3>
   <form th:action="@{/login}" method="post">
     <ul class="list">
-      <li><label><input type="text" name="username" placeholder="이메일" required
+      <li><label><input type="text" name="email" placeholder="이메일" required
           autofocus/></label></li>
       <li><label><input type="password" name="password" placeholder="비밀번호"
           required/></label>
       </li>
     </ul>
+    <p><label><input type="text" name="redirectUrl"
+        th:value="${param.redirectUrl}" style="width:300px" readonly/></label>
+    </p>
     <p>
       <button type="submit">로그인</button>
-      <a th:href="@{/user/signup}">회원가입</a>
+      <a th:href="@{/signup}">회원가입</a>
     </p>
   </form>
   <p th:if="${param.error}" class="warn">잘못된 사용자 이름과 비빌번호입니다.</p>
-  <p th:if="${param.logout}" class="warn">로그아웃 했습니다.</p>
 </main>
 </body>
 </html>

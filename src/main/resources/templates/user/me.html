@@ -21,10 +21,13 @@
       <td th:text="*{name}">홍길동</td>
     </tr>
   </table>
-  <p><a th:href="@{/user/passwordEdit}">비밀번호 변경</a></p>
+  <p><a th:href="@{/user/password}">비밀번호 변경</a></p>
   <form th:action="@{/logout}" method="post">
-    <button type="submit">Sign Out</button>
+    <p>
+      <button type="submit">로그아웃</button>
+    </p>
   </form>
+  <p th:if="${param.changed}" class="warn">비밀번호를 변경했습니다.</p>
 </main>
 </body>
 </html>
