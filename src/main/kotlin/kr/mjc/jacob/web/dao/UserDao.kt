@@ -1,7 +1,6 @@
 package kr.mjc.jacob.web.dao
 
 import kr.mjc.jacob.web.toMap
-import lombok.AllArgsConstructor
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Repository
  * @author Jacob
  */
 @Repository
-@AllArgsConstructor
 class UserDao(val jt: NamedParameterJdbcTemplate) {
   private val LIST_USERS =
     "select userId, email, name from user order by userId desc limit :offset, :count"
@@ -72,24 +70,22 @@ class UserDao(val jt: NamedParameterJdbcTemplate) {
   /**
    * 회원 가입
    * @param user 회원정보
-   * @throws DataAccessException 이메일 중복으로 회원가입 실패 시
    */
-  fun addUser(user: User): Int {
-    return jt.queryForObject(ADD_USER, user.toMap(), Int::class.java)!!
+  fun addUser(user: User) {
+    user.userId = jt.queryForObject(ADD_USER, user.toMap(), Int::class.java)!!
   }
 
   /**
    * 비밀번호 수정
    *
-   * @param userId          회원번호
-   * @param currentPassword 현재 비밀번호
-   * @param newPassword     새 비밀번호
+   * @param userId      회원번호
+   * @param password    현재 비밀번호
+   * @param newPassword 새 비밀번호
    * @return 수정 성공시 1, 회원이 없거나 비밀번호가 틀리면 0
    */
   fun updatePassword(userId: Int, password: String, newPassword: String): Int {
-    val params = mapOf(
-      "userId" to userId, "password" to password, "newPassword" to newPassword
-    )
+    val params = mapOf("userId" to userId, "password" to password,
+        "newPassword" to newPassword)
     return jt.update(UPDATE_PASSWORD, params)
   }
 

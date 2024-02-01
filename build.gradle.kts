@@ -29,17 +29,13 @@ dependencies {
   runtimeOnly("org.mariadb.jdbc:mariadb-java-client")
   implementation("org.springframework.boot:spring-boot-starter-tomcat")
   testImplementation("org.springframework.boot:spring-boot-starter-test")
-  implementation("org.springframework.boot:spring-boot-starter-security")
-  implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6")
+
   // apache commons
   implementation("org.apache.commons:commons-lang3")
+
   // owasp java encoder
   implementation("org.owasp.encoder:encoder:1.+")
   implementation("org.owasp.encoder:encoder-jsp:1.+")
-
-  // lombok
-  compileOnly("org.projectlombok:lombok")
-  annotationProcessor("org.projectlombok:lombok")
 }
 
 tasks.withType<KotlinCompile> {
