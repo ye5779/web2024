@@ -39,6 +39,9 @@ dependencies {
 
   // bcrypt
   implementation("de.svenkubiak:jBCrypt:+")
+
+  // ognl
+  runtimeOnly("ognl:ognl:+")
 }
 
 tasks.withType<KotlinCompile> {

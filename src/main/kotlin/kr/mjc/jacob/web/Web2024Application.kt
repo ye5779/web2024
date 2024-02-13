@@ -11,7 +11,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
 @SpringBootApplication
-@ServletComponentScan(basePackages = ["kr.mjc.jacob.web.examples"])
+@ServletComponentScan(basePackages = ["kr.mjc.jacob.web.servlets"])
 class Web2024Application : SpringBootServletInitializer(), WebMvcConfigurer {
 
   @Autowired lateinit var authInterceptor: AuthInterceptor
@@ -31,8 +31,6 @@ class Web2024Application : SpringBootServletInitializer(), WebMvcConfigurer {
       application: SpringApplicationBuilder): SpringApplicationBuilder {
     return application.sources(Web2024Application::class.java)
   }
-
-
 }
 
 fun main(args: Array<String>) {

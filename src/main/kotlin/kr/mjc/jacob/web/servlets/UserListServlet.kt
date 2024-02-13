@@ -1,4 +1,4 @@
-package kr.mjc.jacob.web.examples
+package kr.mjc.jacob.web.servlets
 
 import jakarta.servlet.annotation.WebServlet
 import jakarta.servlet.http.HttpServlet
