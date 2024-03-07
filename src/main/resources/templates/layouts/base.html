@@ -22,7 +22,7 @@
           class="nav-link">Users</a></li>
       <li class="nav-item"><a th:href="@{/post/post_list}"
           class="nav-link">Posts</a></li>
-      <li class="nav-item" th:unless="${session.user}"><a th:href="@{/login/}"
+      <li class="nav-item" th:unless="${session.user}"><a th:href="@{/login}"
           class="nav-link">SignIn</a>
       </li>
       <li class="nav-item" th:if="${session.user}"><a th:href="@{/user/profile}"

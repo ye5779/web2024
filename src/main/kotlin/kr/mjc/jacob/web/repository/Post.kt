@@ -4,10 +4,10 @@ import org.owasp.encoder.Encode
 import org.springframework.data.annotation.Id
 import java.time.LocalDateTime
 
-data class Post(@Id var id: Int = 0, var title: String = "",
+data class Post(@Id val id: Int = 0, var title: String = "",
                 var content: String = "", var userId: Int = 0,
                 var firstName: String = "",
-                var pubDate: LocalDateTime = LocalDateTime.now(),
+                val pubDate: LocalDateTime = LocalDateTime.now(),
                 var lastModified: LocalDateTime = LocalDateTime.now()) {
 
   fun setUser(user: User) = this.apply {
