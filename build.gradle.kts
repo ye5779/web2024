@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
   war
-  id("org.springframework.boot") version "3.2.2"
+  id("org.springframework.boot") version "3.2.3"
   id("io.spring.dependency-management") version "1.1.4"
   kotlin("jvm") version "1.9.22"
   kotlin("plugin.spring") version "1.9.22"
@@ -20,15 +20,15 @@ repositories {
 }
 
 dependencies {
-  implementation("org.springframework.boot:spring-boot-starter-jdbc")
-  implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
   implementation("org.springframework.boot:spring-boot-starter-web")
+  implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+  implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
+  implementation("org.springframework.boot:spring-boot-starter-tomcat")
+  developmentOnly("org.springframework.boot:spring-boot-devtools")
+  testImplementation("org.springframework.boot:spring-boot-starter-test")
   implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
   implementation("org.jetbrains.kotlin:kotlin-reflect")
-  developmentOnly("org.springframework.boot:spring-boot-devtools")
   runtimeOnly("org.mariadb.jdbc:mariadb-java-client")
-  implementation("org.springframework.boot:spring-boot-starter-tomcat")
-  testImplementation("org.springframework.boot:spring-boot-starter-test")
 
   // apache commons
   implementation("org.apache.commons:commons-lang3")

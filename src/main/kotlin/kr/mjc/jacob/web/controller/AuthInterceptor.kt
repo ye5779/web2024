@@ -2,7 +2,7 @@ package kr.mjc.jacob.web.controller
 
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
-import kr.mjc.jacob.web.dao.User
+import kr.mjc.jacob.web.repository.User
 import kr.mjc.jacob.web.fullUrl
 import kr.mjc.jacob.web.urlEncoded
 import org.springframework.stereotype.Component

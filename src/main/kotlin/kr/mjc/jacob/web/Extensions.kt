@@ -1,8 +1,11 @@
 package kr.mjc.jacob.web
 
 import jakarta.servlet.http.HttpServletRequest
+import org.mindrot.jbcrypt.BCrypt
 import java.net.URLEncoder
 import java.nio.charset.Charset
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import kotlin.reflect.KClass
 import kotlin.reflect.full.memberProperties
 
@@ -22,7 +25,19 @@ fun Any.toMap(): Map<String, Any?> {
 }
 
 /**
- * Encode url
+ * encode url
  */
 val String.urlEncoded: String
   get() = URLEncoder.encode(this, Charset.defaultCharset())
+
+/**
+ * hash password
+ */
+val String.bcryptHashed: String
+  get() = BCrypt.hashpw(this, BCrypt.gensalt())
+
+/**
+ * format date
+ */
+val LocalDateTime.formatted: String
+  get() = this.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))

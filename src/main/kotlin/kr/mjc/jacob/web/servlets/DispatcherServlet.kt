@@ -1,6 +1,5 @@
 package kr.mjc.jacob.web.servlets
 
-import jakarta.servlet.ServletException
 import jakarta.servlet.annotation.WebServlet
 import jakarta.servlet.http.HttpServlet
 import jakarta.servlet.http.HttpServletRequest
@@ -9,10 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.thymeleaf.TemplateEngine
 import org.thymeleaf.context.Context
 
-@WebServlet("/servlets/*")
+@WebServlet("/dispatcher/*")
 class DispatcherServlet : HttpServlet() {
 
-  @Autowired lateinit var handler: ExampleRequestHandler
+  @Autowired lateinit var exampleHandler: ExampleRequestHandler
   @Autowired lateinit var thymeleaf: TemplateEngine
 
   override fun doGet(req: HttpServletRequest, resp: HttpServletResponse) {
@@ -20,10 +19,10 @@ class DispatcherServlet : HttpServlet() {
     println("pathInfo = ${req.pathInfo}")
     val context = Context()
     when (req.pathInfo) {
-      "/hello" -> handler.hello(req, resp, context)
-      "/users" -> handler.users(req, resp, context)
+      "/examples/hello" -> exampleHandler.hello(req, resp, context)
+      "/examples/users" -> exampleHandler.users(req, resp, context)
     }
-    val result = thymeleaf.process("${req.servletPath}${req.pathInfo}", context)
+    val result = thymeleaf.process(req.pathInfo, context)
     resp.contentType = "text/html"
     resp.writer.println(result)
   }

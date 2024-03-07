@@ -21,7 +21,7 @@ class Web2024Application : SpringBootServletInitializer(), WebMvcConfigurer {
    */
   override fun addInterceptors(registry: InterceptorRegistry) {
     registry.addInterceptor(authInterceptor)
-      .addPathPatterns("/post/postAdd", "/post/postUpdate", "/user/me",
+      .addPathPatterns("/post/post_create", "/post/post_update", "/user/profile",
           "/user/password")
   }
   /**
