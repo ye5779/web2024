@@ -1,4 +1,4 @@
-CREATE TABLE user (
+CREATE TABLE if not exists user (
   id   int unsigned NOT NULL AUTO_INCREMENT,
   username      varchar(50)  NOT NULL,
   password      char(60)     NOT NULL,
@@ -8,7 +8,7 @@ CREATE TABLE user (
   UNIQUE KEY username (username)
 );
 
-CREATE TABLE post (
+CREATE TABLE if not exists post (
   id int unsigned NOT NULL AUTO_INCREMENT,
   title         varchar(255) NOT NULL,
   content       text         NOT NULL,

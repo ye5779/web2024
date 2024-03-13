@@ -30,8 +30,10 @@ interface CustomUserRepository {
 class CustomUserRepositoryImpl(
     private val template: NamedParameterJdbcTemplate) : CustomUserRepository {
 
-  private val CHANGE_PASSWORD =
-    "update user set password=:password where id=:id"
+  companion object {
+    private const val CHANGE_PASSWORD =
+      "update user set password=:password where id=:id"
+  }
 
   override fun changePassword(id: Int, password: String) {
     template.update(CHANGE_PASSWORD, mapOf("id" to id, "password" to password))
