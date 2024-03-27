@@ -59,7 +59,7 @@ class PostController(val postRepository: PostRepository) {
   @GetMapping("/post/post_detail")
   fun postDetail(id: Int, @SessionAttribute user: User?, model: Model) {
     try {
-      val post = postRepository.findById(id).orElseThrow()
+      val post: Post? = postRepository.findById(id).orElseThrow()
       if (post?.userId == user?.id) model.addAttribute("owner", true)
       model.addAttribute("post", post)
     } catch (e: Exception) {

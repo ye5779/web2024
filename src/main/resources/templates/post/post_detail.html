@@ -19,15 +19,14 @@
     <label class="form-check-label">Safe</label>
     <input type="hidden" name="id" th:value="${post.id}"/>
   </form>
-  <ul class="list-group">
-    <li th:text="|${post.id}. ${post.title}|"
-        class="list-group-item fw-bold"></li>
-    <li class="list-group-item"><span th:text="${post.pubDate}"></span>, <a
-        th:href="@{/user/user_detail(id=${post.userId})}"
-        th:text="${post.firstName}"></a></li>
-    <li th:unless="${param.safe}" th:utext="${post.contentHtml}"
+  <ul class="list-group" th:object="${post}">
+    <li th:text="|*{id}. *{title}|" class="list-group-item fw-bold"></li>
+    <li class="list-group-item"><span th:text="*{pubDate}"></span>, <a
+        th:href="@{/user/user_detail(id=*{userId})}" th:text="*{firstName}"></a>
+    </li>
+    <li th:unless="${param.safe}" th:utext="*{contentHtml}"
         class="list-group-item"></li>
-    <li th:if="${param.safe}" th:utext="${post.contentBr}"
+    <li th:if="${param.safe}" th:utext="*{contentBr}"
         class="list-group-item"></li>
   </ul>
 </main>
@@ -35,7 +34,7 @@
   document.forms[0].addEventListener('submit', function (event) {
     if (!confirm("삭제하시겠습니까?")) event.preventDefault()
   })
-  document.forms[1].addEventListener('change', function (event) {
+  document.forms[1].addEventListener('change', function () {
     this.submit();
   })
 </script>

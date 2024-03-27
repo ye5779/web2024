@@ -6,9 +6,7 @@ import kr.mjc.jacob.web.bcryptHashed
 import kr.mjc.jacob.web.repository.User
 import kr.mjc.jacob.web.repository.UserRepository
 import kr.mjc.jacob.web.urlEncoded
-import org.mindrot.jbcrypt.BCrypt
 import org.slf4j.LoggerFactory
-import org.springframework.dao.DataAccessException
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
@@ -50,15 +48,14 @@ class UserController(val userRepository: UserRepository) {
   @PostMapping("/signup")
   fun signup(user: User, session: HttpSession,
              attributes: RedirectAttributes): String {
-    try {
-      userRepository.findByUsername(user.username)  // 이메일이 존재함
-      attributes.addFlashAttribute("duplicate_email", "duplicate_email")
-      return "redirect:/signup"
-    } catch (e: DataAccessException) {    // 이메일이 없음
-      user.hashPassword()
-      userRepository.save(user) // 등록 성공
+    val exists = userRepository.existsByUsername(user.username)
+    if (!exists) {   // 이메일이 없음. 등록 진행
+      userRepository.save(user.hashPassword()) // 등록 성공
       session.setAttribute("user", user)
       return LANDING_PAGE
+    } else {  // 이메일 존재. 등록 실패
+      attributes.addFlashAttribute("duplicate_email", "duplicate_email")
+      return "redirect:/signup"
     }
   }
 
@@ -68,18 +65,13 @@ class UserController(val userRepository: UserRepository) {
   @PostMapping("/login")
   fun login(username: String, password: String, redirectUrl: String,
             session: HttpSession, attributes: RedirectAttributes): String {
-    try {
-      val user = userRepository.findByUsername(username)
-      return if (BCrypt.checkpw(password, user.password)) { // 비밀번호 매치
-        session.setAttribute("user", user)
-        if (redirectUrl.isBlank()) LANDING_PAGE else "redirect:${redirectUrl}"
-      } else {  // 비밀번호가 매치하지 않을 경우
-        attributes.addFlashAttribute("error", "wrong_password")
-        "redirect:/login?redirectUrl=${redirectUrl.urlEncoded}"
-      }
-    } catch (e: DataAccessException) { // 사용자 정보가 없을 경우
-      attributes.addFlashAttribute("error", "no_user")
-      return "redirect:/login?redirectUrl=${redirectUrl.urlEncoded}"
+    val user = userRepository.findByUsername(username)
+    return if (user?.matchPassword(password) == true) { // 비밀번호 매치
+      session.setAttribute("user", user)
+      if (redirectUrl.isBlank()) LANDING_PAGE else "redirect:${redirectUrl}"
+    } else {  // 사용자가 없거나 비밀번호가 매치하지 않을 경우
+      attributes.addFlashAttribute("error", "login_failure")
+      "redirect:/login?redirectUrl=${redirectUrl.urlEncoded}"
     }
   }
 
@@ -89,7 +81,7 @@ class UserController(val userRepository: UserRepository) {
   @PostMapping("/user/password")
   fun password(@SessionAttribute user: User, oldPassword: String,
                newPassword: String, attributes: RedirectAttributes): String {
-    return if (BCrypt.checkpw(oldPassword, user.password)) { // 비밀번호 매치
+    return if (user.matchPassword(oldPassword)) { // 비밀번호 매치
       val hashedPassword = newPassword.bcryptHashed
       userRepository.changePassword(user.id, hashedPassword) // DB의 비밀번호 변경
       user.password = hashedPassword  // 세션의 비밀번호 변경
@@ -128,7 +120,7 @@ class UserController(val userRepository: UserRepository) {
   @PostMapping("/unregister")
   fun unregister(session: HttpSession, @SessionAttribute user: User,
                  password: String): String {
-    return if (BCrypt.checkpw(password, user.password)) {
+    return if (user.matchPassword(password)) {
       userRepository.deleteById(user.id)
       logout(session)
     } else "redirect:/user/profile?error=wrongpassword"
