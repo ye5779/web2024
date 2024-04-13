@@ -1,21 +1,28 @@
 package kr.mjc.jacob.web.repository
 
+import jakarta.persistence.*
+import kr.mjc.jacob.web.formatted
 import org.owasp.encoder.Encode
-import org.springframework.data.annotation.Id
 import java.time.LocalDateTime
 
-data class Post(@Id val id: Int = 0, var title: String = "",
-                var content: String = "", var userId: Int = 0,
-                var firstName: String = "",
-                val pubDate: LocalDateTime = LocalDateTime.now(),
-                var lastModified: LocalDateTime = LocalDateTime.now()) {
+@Entity
+class Post {
+  @Id @GeneratedValue(strategy = GenerationType.IDENTITY) var id: Long = 0
+  lateinit var title: String
+  lateinit var content: String
+  @ManyToOne @JoinColumn(name = "user_id") lateinit var user: User
+  lateinit var pubDate: LocalDateTime
+  lateinit var lastModified: LocalDateTime
 
-  fun setUser(user: User) = this.apply {
-    userId = user.id
-    firstName = user.firstName
-  }
+  val pubDateFormatted get() = pubDate.formatted
+
+  val lastModifiedFormatted get() = lastModified.formatted
 
   val contentBr get() = content.replace("\n", "<br/>\n")
 
   val contentHtml get() = Encode.forHtml(content).replace("\n", "<br/>\n")
+
+  override fun toString(): String {
+    return "Post(id=$id, title='$title', content='$content', pubDate=${pubDate.formatted}, lastModified=${lastModified.formatted}, user=$user)"
+  }
 }

@@ -26,9 +26,8 @@ class PostController(val postRepository: PostRepository) {
 
   companion object {
     private const val PAGE_SIZE = 10
+    private val log = LoggerFactory.getLogger(PostController::class.java)
   }
-
-  private val log = LoggerFactory.getLogger(this::class.java)
 
   /**
    * 글목록
@@ -49,7 +48,12 @@ class PostController(val postRepository: PostRepository) {
    */
   @PostMapping("/post/post_create")
   fun postCreate(post: Post, @SessionAttribute user: User): String {
-    postRepository.save(post.setUser(user))
+    post.apply {
+      this.user = user
+      pubDate = LocalDateTime.now()
+      lastModified = LocalDateTime.now()
+    }
+    postRepository.save(post)
     return "redirect:/post/post_list"
   }
 
@@ -57,10 +61,10 @@ class PostController(val postRepository: PostRepository) {
    * 글보기
    */
   @GetMapping("/post/post_detail")
-  fun postDetail(id: Int, @SessionAttribute user: User?, model: Model) {
+  fun postDetail(id: Long, @SessionAttribute user: User?, model: Model) {
     try {
-      val post: Post? = postRepository.findById(id).orElseThrow()
-      if (post?.userId == user?.id) model.addAttribute("owner", true)
+      val post: Post = postRepository.findById(id).orElseThrow()
+      if (post.user.id == user?.id) model.addAttribute("owner", true)
       model.addAttribute("post", post)
     } catch (e: Exception) {
       throw ResponseStatusException(HttpStatus.BAD_REQUEST)
@@ -71,7 +75,7 @@ class PostController(val postRepository: PostRepository) {
    * 글수정 화면
    */
   @GetMapping("/post/post_update")
-  fun postUpdate(id: Int, @SessionAttribute user: User, model: Model) {
+  fun postUpdate(id: Long, @SessionAttribute user: User, model: Model) {
     val post = getPost(id, user.id)
     model.addAttribute("post", post)
   }
@@ -82,9 +86,11 @@ class PostController(val postRepository: PostRepository) {
   @PostMapping("/post/post_update")
   fun postUpdate(postForm: Post, @SessionAttribute user: User): String {
     val post = getPost(postForm.id, user.id)
-    post.title = postForm.title
-    post.content = postForm.content
-    post.lastModified = LocalDateTime.now()
+    post.apply {
+      post.title = postForm.title
+      post.content = postForm.content
+      post.lastModified = LocalDateTime.now()
+    }
     postRepository.save(post)
     return "redirect:/post/post_detail?id=" + post.id
   }
@@ -93,7 +99,7 @@ class PostController(val postRepository: PostRepository) {
    * 글삭제
    */
   @PostMapping("/post/deletePost")
-  fun deletePost(id: Int, @SessionAttribute user: User,
+  fun deletePost(id: Long, @SessionAttribute user: User,
                  @SessionAttribute("CURRENT_PAGE")
                  currentPage: String): String {
     getPost(id, user.id)
@@ -106,9 +112,9 @@ class PostController(val postRepository: PostRepository) {
    *
    * @throws ResponseStatusException 권한이 없을 경우
    */
-  private fun getPost(id: Int, userId: Int): Post {
+  private fun getPost(id: Long, userId: Long): Post {
     val post = postRepository.findById(id).orElseThrow()
-    if (userId != post.userId) throw ResponseStatusException(
+    if (userId != post.user.id) throw ResponseStatusException(
         HttpStatus.UNAUTHORIZED)  // 401
     return post
   }

@@ -6,6 +6,15 @@ import java.net.URLEncoder
 import java.nio.charset.Charset
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import kotlin.reflect.full.memberProperties
+
+/**
+ * 오브젝트의 속성들을 맵으로 만든다.
+ */
+val Any.toMap: Map<String, Any?>
+  get() = this::class.memberProperties.associate { prop ->
+    prop.name to prop.getter.call(this)
+  }
 
 /**
  * queryString을 포함한 full url

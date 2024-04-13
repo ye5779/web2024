@@ -21,6 +21,10 @@
       <th>가입일시</th>
       <td th:text="*{dateJoinedFormatted}">홍길동</td>
     </tr>
+    <tr>
+      <th>마지막로그인</th>
+      <td th:text="*{lastLoginFormatted}">홍길동</td>
+    </tr>
   </table>
   <form th:action="@{/logout}" method="post">
     <p class="btn-group d-flex">

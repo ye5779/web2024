@@ -1,19 +1,16 @@
 package kr.mjc.jacob.web.repository
 
-import org.springframework.data.jdbc.repository.query.Modifying
-import org.springframework.data.jdbc.repository.query.Query
-import org.springframework.data.repository.CrudRepository
-import org.springframework.data.repository.PagingAndSortingRepository
+import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Modifying
+import org.springframework.data.jpa.repository.Query
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDateTime
 
 /**
- * SpringDataJdbc를 사용한 user repository
- * Repository 인터페이스를 확장한 인터페이스의 구현체는
- * 개발자가 구현하지 않고 스프링이 구현한다.
- * @author Jacob
+ * JpaRepository를 확장한 repository interface의 구현체(Repository proxy)는
+ * Spring이 런타임에 구현한다.
  */
-interface UserRepository : CrudRepository<User, Int>,
-    PagingAndSortingRepository<User, Int> {
+interface UserRepository : JpaRepository<User, Long> {
 
   fun findByUsername(username: String): User?
 
@@ -21,6 +18,11 @@ interface UserRepository : CrudRepository<User, Int>,
 
   @Modifying
   @Transactional
-  @Query("update user set password=:password where id=:id")
-  fun changePassword(id: Int, password: String)
+  @Query("update User set password=:password where id=:id")
+  fun changePassword(id: Long, password: String)
+
+  @Modifying
+  @Transactional
+  @Query("update User set lastLogin=current_timestamp where id=:id")
+  fun updateLastLogin(id: Long)
 }

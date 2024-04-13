@@ -9,12 +9,14 @@
       <th>이메일</th>
       <th>이름</th>
       <th>가입일시</th>
+      <th>마지막로그인</th>
     </tr>
     <tr th:each="user: ${page.content}">
       <td th:text="${user.id}">1</td>
       <td th:text="${user.username}">lee@naver.com</td>
       <td th:text="${user.firstName}">이병헌</td>
       <td th:text="${user.dateJoined}"></td>
+      <td th:text="${user.lastLogin}"></td>
     </tr>
   </table>
 </main>

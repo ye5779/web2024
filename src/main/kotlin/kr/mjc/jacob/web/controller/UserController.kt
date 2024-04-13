@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.SessionAttribute
 import org.springframework.web.server.ResponseStatusException
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
+import java.time.LocalDateTime
 
 /**
  * Servlet API를 사용하지 않는 컨트롤러
@@ -26,11 +27,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes
 class UserController(val userRepository: UserRepository) {
 
   companion object {
-    const val LANDING_PAGE = "redirect:/user/user_list"
-    const val PAGE_SIZE = 10
+    private const val LANDING_PAGE = "redirect:/user/user_list"
+    private const val PAGE_SIZE = 10
+    private val log = LoggerFactory.getLogger(UserController::class.java)
   }
-
-  private val log = LoggerFactory.getLogger(this::class.java)
 
   /**
    * 회원목록
@@ -50,7 +50,12 @@ class UserController(val userRepository: UserRepository) {
              attributes: RedirectAttributes): String {
     val exists = userRepository.existsByUsername(user.username)
     if (!exists) {   // 이메일이 없음. 등록 진행
-      userRepository.save(user.hashPassword()) // 등록 성공
+      user.apply {
+        password = password.bcryptHashed
+        dateJoined = LocalDateTime.now()
+        lastLogin = LocalDateTime.now()
+      }
+      userRepository.save(user) // 등록 성공
       session.setAttribute("user", user)
       return LANDING_PAGE
     } else {  // 이메일 존재. 등록 실패
@@ -67,6 +72,7 @@ class UserController(val userRepository: UserRepository) {
             session: HttpSession, attributes: RedirectAttributes): String {
     val user = userRepository.findByUsername(username)
     return if (user?.matchPassword(password) == true) { // 비밀번호 매치
+      userRepository.updateLastLogin(user.id)
       session.setAttribute("user", user)
       if (redirectUrl.isBlank()) LANDING_PAGE else "redirect:${redirectUrl}"
     } else {  // 사용자가 없거나 비밀번호가 매치하지 않을 경우
@@ -97,7 +103,7 @@ class UserController(val userRepository: UserRepository) {
    * 회원정보
    */
   @GetMapping("/user/user_detail")
-  fun userDetail(id: Int, model: Model) {
+  fun userDetail(id: Long, model: Model) {
     try {
       model.addAttribute("user", userRepository.findById(id).orElseThrow())
     } catch (e: Exception) {
