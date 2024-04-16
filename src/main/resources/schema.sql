@@ -13,8 +13,7 @@ CREATE TABLE if not exists post (
   id            int          NOT NULL AUTO_INCREMENT,
   title         varchar(255) NOT NULL,
   content       text         NOT NULL,
-  user_id       int          NOT NULL,            -- references user.id
-  first_name    varchar(20)  NOT NULL DEFAULT '', -- jpa에서 사용하지 않음. user.firstName으로 사용
+  user_id       int          NOT NULL, -- references user.id
   pub_date      datetime     NOT NULL DEFAULT current_timestamp(),
   last_modified timestamp    NOT NULL DEFAULT current_timestamp() on update current_timestamp(),
   PRIMARY KEY (id),

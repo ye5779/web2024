@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.plugin.mpp.pm20.util.archivesName
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -8,9 +9,6 @@ plugins {
   kotlin("plugin.spring") version "1.9.23"
   kotlin("plugin.jpa") version "1.9.23"
 }
-
-group = "kr.mjc.jacob"
-version = "0.0.1-SNAPSHOT"
 
 java {
   sourceCompatibility = JavaVersion.VERSION_21
@@ -37,7 +35,6 @@ dependencies {
 
   // owasp java encoder
   implementation("org.owasp.encoder:encoder:1.+")
-  implementation("org.owasp.encoder:encoder-jsp:1.+")
 
   // bcrypt
   implementation("de.svenkubiak:jBCrypt:+")
@@ -55,4 +52,15 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
   useJUnitPlatform()
+}
+
+archivesName = providers.gradleProperty("appname").get()
+
+tasks.register<Copy>("dist") {
+  dependsOn("bootWar")
+  val source = "build/libs/${providers.gradleProperty("appname").get()}.war"
+  val target = providers.gradleProperty("webapps").get()
+  println("copy from $source to $target")
+  from(source)
+  into(target)
 }
