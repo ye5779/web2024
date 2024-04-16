@@ -2,10 +2,14 @@
 
 Kotlin, Spring Boot, Spring Data JPA, Thymeleaf를 사용한 Post Web application
 
-## 요구 사항
+## 실행 환경
 
 1. Java 17 이상
 2. MariaDB 10.x 이상
+3. Kotlin 1.9.x
+4. Spring Boot 3.2.x
+5. Spring Data JPA 3.2.x
+6. Thymeleaf 3.x
 
 ## 설치 방법
 
