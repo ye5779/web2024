@@ -23,6 +23,6 @@ interface UserRepository : JpaRepository<User, Long> {
 
   @Modifying
   @Transactional
-  @Query("update User set lastLogin=current_timestamp where id=:id")
-  fun updateLastLogin(id: Long)
+  @Query("update User set lastLogin=:lastLogin where id=:id")
+  fun updateLastLogin(id: Long, lastLogin: LocalDateTime)
 }

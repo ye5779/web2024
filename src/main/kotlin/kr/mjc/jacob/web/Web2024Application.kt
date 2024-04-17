@@ -14,7 +14,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 @ServletComponentScan(basePackages = ["kr.mjc.jacob.web.servlets"])
 class Web2024Application : SpringBootServletInitializer(), WebMvcConfigurer {
 
-  @Autowired lateinit var authInterceptor: AuthInterceptor
+  @Autowired
+  lateinit var authInterceptor: AuthInterceptor
 
   /**
    * 인터셉터 등록
@@ -22,7 +23,7 @@ class Web2024Application : SpringBootServletInitializer(), WebMvcConfigurer {
   override fun addInterceptors(registry: InterceptorRegistry) {
     registry.addInterceptor(authInterceptor)
       .addPathPatterns("/post/post_create", "/post/post_update",
-          "/user/profile", "/user/password")
+                       "/user/profile", "/user/password")
   }
   /**
    * war 파일을 위한 구성

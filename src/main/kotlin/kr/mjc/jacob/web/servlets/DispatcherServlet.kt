@@ -11,8 +11,10 @@ import org.thymeleaf.context.Context
 @WebServlet("/dispatcher/*")
 class DispatcherServlet : HttpServlet() {
 
-  @Autowired lateinit var exampleHandler: ExampleRequestHandler
-  @Autowired lateinit var thymeleaf: TemplateEngine
+  @Autowired
+  lateinit var exampleHandler: ExampleRequestHandler
+  @Autowired
+  lateinit var thymeleaf: TemplateEngine
 
   override fun doGet(req: HttpServletRequest, resp: HttpServletResponse) {
     println("servletPath = ${req.servletPath}")

@@ -15,7 +15,9 @@ import java.time.LocalDateTime
  */
 @Entity
 class User : Serializable {
-  @Id @GeneratedValue(strategy = GenerationType.IDENTITY) var id: Long = 0
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  var id: Long = 0
   lateinit var username: String
   lateinit var password: String
   lateinit var firstName: String

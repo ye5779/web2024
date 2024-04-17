@@ -14,12 +14,12 @@ import org.thymeleaf.context.Context
 class ExampleRequestHandler(val userRepository: UserRepository) {
 
   fun hello(req: HttpServletRequest, resp: HttpServletResponse,
-            context: Context) {
+      context: Context) {
     context.setVariable("name", "Jacob")
   }
 
   fun users(req: HttpServletRequest, resp: HttpServletResponse,
-            context: Context) {
+      context: Context) {
     val userPage: Page<User> =
       userRepository.findAll(PageRequest.of(0, 10, Sort.Direction.DESC, "id"))
     context.setVariable("page", userPage)

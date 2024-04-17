@@ -12,7 +12,8 @@ import org.springframework.data.domain.Sort
 @WebServlet("/servlets/users")
 class UserListServlet : HttpServlet() {
 
-  @Autowired lateinit var userRepository: UserRepository
+  @Autowired
+  lateinit var userRepository: UserRepository
 
   override fun doGet(req: HttpServletRequest, resp: HttpServletResponse) {
     val users =

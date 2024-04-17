@@ -100,8 +100,7 @@ class PostController(val postRepository: PostRepository) {
    */
   @PostMapping("/post/deletePost")
   fun deletePost(id: Long, @SessionAttribute user: User,
-                 @SessionAttribute("CURRENT_PAGE")
-                 currentPage: String): String {
+      @SessionAttribute("CURRENT_PAGE") currentPage: String): String {
     getPost(id, user.id)
     postRepository.deleteById(id)
     return "redirect:$currentPage"

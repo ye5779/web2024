@@ -15,7 +15,8 @@ import org.thymeleaf.context.Context
 @Controller
 class ExampleController(val userRepository: UserRepository) {
 
-  @Autowired lateinit var thymeleaf: TemplateEngine
+  @Autowired
+  lateinit var thymeleaf: TemplateEngine
 
   @GetMapping("/examples/hello")
   fun hello2(req: HttpServletRequest, resp: HttpServletResponse) {

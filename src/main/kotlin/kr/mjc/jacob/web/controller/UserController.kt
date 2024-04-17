@@ -47,7 +47,7 @@ class UserController(val userRepository: UserRepository) {
    */
   @PostMapping("/signup")
   fun signup(user: User, session: HttpSession,
-             attributes: RedirectAttributes): String {
+      attributes: RedirectAttributes): String {
     val exists = userRepository.existsByUsername(user.username)
     if (!exists) {   // 이메일이 없음. 등록 진행
       user.apply {
@@ -69,10 +69,11 @@ class UserController(val userRepository: UserRepository) {
    */
   @PostMapping("/login")
   fun login(username: String, password: String, redirectUrl: String,
-            session: HttpSession, attributes: RedirectAttributes): String {
+      session: HttpSession, attributes: RedirectAttributes): String {
     val user = userRepository.findByUsername(username)
     return if (user?.matchPassword(password) == true) { // 비밀번호 매치
-      userRepository.updateLastLogin(user.id)
+      user.lastLogin = LocalDateTime.now()
+      userRepository.updateLastLogin(user.id, user.lastLogin)
       session.setAttribute("user", user)
       if (redirectUrl.isBlank()) LANDING_PAGE else "redirect:${redirectUrl}"
     } else {  // 사용자가 없거나 비밀번호가 매치하지 않을 경우
@@ -86,7 +87,7 @@ class UserController(val userRepository: UserRepository) {
    */
   @PostMapping("/user/password")
   fun password(@SessionAttribute user: User, oldPassword: String,
-               newPassword: String, attributes: RedirectAttributes): String {
+      newPassword: String, attributes: RedirectAttributes): String {
     return if (user.matchPassword(oldPassword)) { // 비밀번호 매치
       val hashedPassword = newPassword.bcryptHashed
       userRepository.changePassword(user.id, hashedPassword) // DB의 비밀번호 변경
@@ -125,7 +126,7 @@ class UserController(val userRepository: UserRepository) {
    */
   @PostMapping("/unregister")
   fun unregister(session: HttpSession, @SessionAttribute user: User,
-                 password: String): String {
+      password: String): String {
     return if (user.matchPassword(password)) {
       userRepository.deleteById(user.id)
       logout(session)
