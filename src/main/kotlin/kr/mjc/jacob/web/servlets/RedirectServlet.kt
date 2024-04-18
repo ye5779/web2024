@@ -9,6 +9,6 @@ import jakarta.servlet.http.HttpServletResponse
 class RedirectServlet : HttpServlet() {
   override fun doGet(req: HttpServletRequest, resp: HttpServletResponse) {
     // TODO: 어떤 처리를 한 후에 redirect
-    resp.sendRedirect(req.contextPath + "/servlets/hello")
+    resp.sendRedirect("${req.contextPath}/servlets/hello")
   }
 }

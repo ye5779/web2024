@@ -8,33 +8,30 @@ import kr.mjc.jacob.web.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
+import org.thymeleaf.TemplateEngine
+import org.thymeleaf.context.Context
 
+/**
+ * 서블릿은 컨스트럭터를 사용하지 않는다.
+ * setter를 사용해서 injection을 한다.
+ */
 @WebServlet("/servlets/users")
 class UserListServlet : HttpServlet() {
 
   @Autowired
   lateinit var userRepository: UserRepository
 
+  @Autowired
+  lateinit var templateEngine: TemplateEngine
+
   override fun doGet(req: HttpServletRequest, resp: HttpServletResponse) {
     val users =
       userRepository.findAll(PageRequest.of(0, 10, Sort.Direction.DESC, "id"))
-    val builder = StringBuilder()
-    users.forEach { user ->
-      builder.append(
-          "<div>${user.id}, ${user.firstName}, ${user.username}</div>")
-    }
 
-    val html = """
-        <!DOCTYPE html>
-        <html>
-        <body>
-        <h3>회원목록</h3>
-        $builder
-        </body>
-        </html>
-        """.trimIndent()
+    val context = Context()
+    context.setVariable("users", users)
 
     resp.contentType = "text/html"
-    resp.writer.println(html)
+    templateEngine.process("examples/users", context, resp.writer)
   }
 }

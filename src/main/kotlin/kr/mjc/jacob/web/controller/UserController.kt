@@ -2,7 +2,6 @@ package kr.mjc.jacob.web.controller
 
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpSession
-import kr.mjc.jacob.web.bcryptHashed
 import kr.mjc.jacob.web.repository.User
 import kr.mjc.jacob.web.repository.UserRepository
 import kr.mjc.jacob.web.urlEncoded
@@ -11,20 +10,19 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.http.HttpStatus
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.SessionAttribute
 import org.springframework.web.server.ResponseStatusException
-import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import java.time.LocalDateTime
 
-/**
- * Servlet API를 사용하지 않는 컨트롤러
- */
-@Controller
-class UserController(val userRepository: UserRepository) {
+/** Servlet API를 사용하지 않는 컨트롤러 */
+//@Controller
+class UserController(private val userRepository: UserRepository,
+    private val passwordEncoder: PasswordEncoder) {
 
   companion object {
     private const val LANDING_PAGE = "redirect:/user/user_list"
@@ -32,9 +30,7 @@ class UserController(val userRepository: UserRepository) {
     private val log = LoggerFactory.getLogger(UserController::class.java)
   }
 
-  /**
-   * 회원목록
-   */
+  /** 회원목록 */
   @GetMapping("/user/user_list")
   fun userList(page: Int = 0, model: Model) {
     val userPage: Page<User> = userRepository.findAll(
@@ -42,16 +38,13 @@ class UserController(val userRepository: UserRepository) {
     model.addAttribute("page", userPage)
   }
 
-  /**
-   * 회원가입
-   */
+  /** 회원가입 */
   @PostMapping("/signup")
-  fun signup(user: User, session: HttpSession,
-      attributes: RedirectAttributes): String {
+  fun signup(user: User, session: HttpSession): String {
     val exists = userRepository.existsByUsername(user.username)
     if (!exists) {   // 이메일이 없음. 등록 진행
       user.apply {
-        password = password.bcryptHashed
+        password = passwordEncoder.encode(password)
         dateJoined = LocalDateTime.now()
         lastLogin = LocalDateTime.now()
       }
@@ -59,50 +52,42 @@ class UserController(val userRepository: UserRepository) {
       session.setAttribute("user", user)
       return LANDING_PAGE
     } else {  // 이메일 존재. 등록 실패
-      attributes.addFlashAttribute("duplicate_email", "duplicate_email")
-      return "redirect:/signup"
+      return "redirect:/signup?duplicate_email"
     }
   }
 
-  /**
-   * 로그인
-   */
+  /** 로그인 */
   @PostMapping("/login")
   fun login(username: String, password: String, redirectUrl: String,
-      session: HttpSession, attributes: RedirectAttributes): String {
+      session: HttpSession): String {
     val user = userRepository.findByUsername(username)
-    return if (user?.matchPassword(password) == true) { // 비밀번호 매치
+    return if (user != null && passwordEncoder.matches(password,
+                                                       user.password)
+    ) { // 비밀번호 매치
       user.lastLogin = LocalDateTime.now()
       userRepository.updateLastLogin(user.id, user.lastLogin)
       session.setAttribute("user", user)
       if (redirectUrl.isBlank()) LANDING_PAGE else "redirect:${redirectUrl}"
     } else {  // 사용자가 없거나 비밀번호가 매치하지 않을 경우
-      attributes.addFlashAttribute("error", "login_failure")
-      "redirect:/login?redirectUrl=${redirectUrl.urlEncoded}"
+      "redirect:/login?redirectUrl=${redirectUrl.urlEncoded}&error"
     }
   }
 
-  /**
-   * 비밀번호변경
-   */
+  /** 비밀번호변경 */
   @PostMapping("/user/password")
   fun password(@SessionAttribute user: User, oldPassword: String,
-      newPassword: String, attributes: RedirectAttributes): String {
-    return if (user.matchPassword(oldPassword)) { // 비밀번호 매치
-      val hashedPassword = newPassword.bcryptHashed
-      userRepository.changePassword(user.id, hashedPassword) // DB의 비밀번호 변경
-      user.password = hashedPassword  // 세션의 비밀번호 변경
-      attributes.addFlashAttribute("password_changed", "password_changed")
-      "redirect:/user/profile"
+      newPassword: String): String {
+    return if (passwordEncoder.matches(oldPassword, user.password)) { // 비밀번호 매치
+      val newPasswordHashed = passwordEncoder.encode(newPassword)
+      userRepository.changePassword(user.id, newPasswordHashed) // DB의 비밀번호 변경
+      user.password = newPasswordHashed  // 세션의 비밀번호 변경
+      "redirect:/user/profile?password_changed"
     } else {  // 비밀번호 매치 안함
-      attributes.addFlashAttribute("wrong_password", "wrong_password")
-      "redirect:/user/password"
+      "redirect:/user/password?wrong_password"
     }
   }
 
-  /**
-   * 회원정보
-   */
+  /** 회원정보 */
   @GetMapping("/user/user_detail")
   fun userDetail(id: Long, model: Model) {
     try {
@@ -112,30 +97,28 @@ class UserController(val userRepository: UserRepository) {
     }
   }
 
-  /**
-   * 로그아웃
-   */
+  /** 로그아웃 */
   @PostMapping("/logout")
   fun logout(session: HttpSession): String {
     session.invalidate()
     return LANDING_PAGE
   }
 
-  /**
-   * 해지
-   */
-  @PostMapping("/unregister")
+  /** 해지 */
+  @PostMapping("/user/delete")
   fun unregister(session: HttpSession, @SessionAttribute user: User,
       password: String): String {
-    return if (user.matchPassword(password)) {
-      userRepository.deleteById(user.id)
-      logout(session)
-    } else "redirect:/user/profile?error=wrongpassword"
+    return if (passwordEncoder.matches(password, user.password)) {
+      try {
+        userRepository.deleteById(user.id)
+        logout(session)
+      } catch (e: Exception) {
+        "redirect:/user/delete?delete_failure"
+      }
+    } else "redirect:/user/delete?wrong_password"
   }
 
-  /**
-   * just forward
-   */
+  /** just forward */
   @GetMapping("/{_:post|user}/**", "/login", "/signup", "/hello", "/examples")
   fun pass(req: HttpServletRequest) {
     log.debug("servletPath = {}", req.servletPath)

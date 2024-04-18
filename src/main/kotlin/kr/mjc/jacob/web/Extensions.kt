@@ -1,7 +1,6 @@
 package kr.mjc.jacob.web
 
 import jakarta.servlet.http.HttpServletRequest
-import org.mindrot.jbcrypt.BCrypt
 import java.net.URLEncoder
 import java.nio.charset.Charset
 import java.time.LocalDateTime
@@ -27,12 +26,6 @@ val HttpServletRequest.fullUrl: String
  */
 val String.urlEncoded: String
   get() = URLEncoder.encode(this, Charset.defaultCharset())
-
-/**
- * hash password
- */
-val String.bcryptHashed: String
-  get() = BCrypt.hashpw(this, BCrypt.gensalt())
 
 /**
  * 날짜를 "yyyy-MM-dd HH:mm:ss"로 포맷하는 formatter

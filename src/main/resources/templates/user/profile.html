@@ -22,7 +22,7 @@
       <td th:text="*{dateJoinedFormatted}">홍길동</td>
     </tr>
     <tr>
-      <th>마지막로그인</th>
+      <th>최근 로그인</th>
       <td th:text="*{lastLoginFormatted}">홍길동</td>
     </tr>
   </table>
@@ -30,16 +30,12 @@
     <p class="btn-group d-flex">
       <a th:href="@{/user/password}" class="btn btn-success flex-grow-1">비밀번호
         변경</a>
+      <a th:href="@{/user/delete}" class="btn btn-dark flex-grow-1">해지</a>
       <button type="submit" class="btn btn-secondary flex-grow-1">로그아웃</button>
     </p>
   </form>
-  <p id="message" class="message"><span th:if="${password_changed}">비밀번호를 변경했습니다.</span>
+  <p id="message" class="message"><span th:if="${param.password_changed}">비밀번호를 변경했습니다.</span>
   </p>
 </main>
-<script>
-  document.forms[0].addEventListener('submit', event => {
-    if (!confirm("로그아웃 하시겠습니까?")) event.preventDefault()
-  })
-</script>
 </body>
 </html>

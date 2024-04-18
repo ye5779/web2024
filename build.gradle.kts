@@ -29,15 +29,13 @@ dependencies {
   implementation("org.jetbrains.kotlin:kotlin-reflect")
   runtimeOnly("org.mariadb.jdbc:mariadb-java-client")
   implementation("org.hibernate:hibernate-core:6.+")
+  implementation("org.springframework.security:spring-security-core")
 
   // apache commons
   implementation("org.apache.commons:commons-lang3")
 
   // owasp java encoder
   implementation("org.owasp.encoder:encoder:1.+")
-
-  // bcrypt
-  implementation("de.svenkubiak:jBCrypt:+")
 
   // ognl
   runtimeOnly("ognl:ognl:+")

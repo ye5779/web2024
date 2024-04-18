@@ -1,5 +1,11 @@
 <!DOCTYPE html>
 <html>
+<head>
+  <style>
+    table {border-top:1px solid gray; width:100%; }
+    th, td {border-bottom:1px solid gray;}
+  </style>
+</head>
 <body>
 <main>
   <h3>회원 목록</h3>
@@ -9,14 +15,14 @@
       <th>이메일</th>
       <th>이름</th>
       <th>가입일시</th>
-      <th>마지막로그인</th>
+      <th>최근 로그인</th>
     </tr>
-    <tr th:each="user: ${page.content}">
+    <tr th:each="user: ${users}">
       <td th:text="${user.id}">1</td>
       <td th:text="${user.username}">lee@naver.com</td>
       <td th:text="${user.firstName}">이병헌</td>
-      <td th:text="${user.dateJoined}"></td>
-      <td th:text="${user.lastLogin}"></td>
+      <td th:text="${user.dateJoinedFormatted}"></td>
+      <td th:text="${user.lastLoginFormatted}"></td>
     </tr>
   </table>
 </main>

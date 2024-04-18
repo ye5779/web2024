@@ -9,28 +9,23 @@ import org.thymeleaf.TemplateEngine
 import org.thymeleaf.context.Context
 
 @WebServlet("/dispatcher/*")
-class DispatcherServlet : HttpServlet() {
+class SimpleDispatcherServlet : HttpServlet() {
 
   @Autowired
   lateinit var exampleHandler: ExampleRequestHandler
   @Autowired
-  lateinit var thymeleaf: TemplateEngine
+  lateinit var templateEngine: TemplateEngine
 
   override fun doGet(req: HttpServletRequest, resp: HttpServletResponse) {
-    println("servletPath = ${req.servletPath}")
-    println("pathInfo = ${req.pathInfo}")
+    println("servletPath = ${req.servletPath}") // 이 서블릿의 path: /dispatcher
+    println("pathInfo = ${req.pathInfo}") // /dispatcher 후의 uri
     val context = Context()
     when (req.pathInfo) {
-      "/examples/hello" -> exampleHandler.hello(req, resp, context)
-      "/examples/users" -> exampleHandler.users(req, resp, context)
+      "/examples/hello" -> exampleHandler.hello(req, context)
+      "/examples/users" -> exampleHandler.users(req, context)
     }
-    val result = thymeleaf.process(req.pathInfo, context)
-    resp.contentType = "text/html"
-    resp.writer.println(result)
-  }
-}
 
-fun Context.set(name: String, value: Any): Context {
-  this.setVariable(name, value)
-  return this
+    resp.contentType = "text/html"
+    templateEngine.process(req.pathInfo, context, resp.writer)
+  }
 }
