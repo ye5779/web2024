@@ -15,9 +15,13 @@ class AuthInterceptor : HandlerInterceptor {
     // 로그인 체크
     val user: User? = request.session.getAttribute("user") as User?
 
-    if (user == null) { // 로그인 안했을 경우 로그인 화면으로
+    // 로그인 안했을 경우 로그인 화면으로
+    // 로그인 후에 요청이 GET일때 원래 요청한 URL. 아닐때 landing page
+    if (user == null) {
+      val redirectUrl = if (request.method == "GET") request.fullUrl.urlEncoded
+      else "${request.contextPath}/user/user_list".urlEncoded
       response.sendRedirect(
-          "${request.contextPath}/login?redirectUrl=${request.fullUrl.urlEncoded}")
+          "${request.contextPath}/login?redirectUrl=$redirectUrl")
       return false
     }
 
