@@ -1,5 +1,5 @@
 CREATE TABLE if not exists user (
-  id          int         NOT NULL AUTO_INCREMENT,
+  id          bigint      NOT NULL AUTO_INCREMENT,
   username    varchar(50) NOT NULL,
   password    char(60)    NOT NULL,
   first_name  varchar(20) NOT NULL,
@@ -10,7 +10,7 @@ CREATE TABLE if not exists user (
 );
 
 CREATE TABLE if not exists post (
-  id            int          NOT NULL AUTO_INCREMENT,
+  id            bigint       NOT NULL AUTO_INCREMENT,
   title         varchar(255) NOT NULL,
   content       text         NOT NULL,
   user_id       int          NOT NULL, -- references user.id
