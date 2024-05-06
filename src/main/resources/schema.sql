@@ -13,7 +13,7 @@ CREATE TABLE if not exists post (
   id            bigint       NOT NULL AUTO_INCREMENT,
   title         varchar(255) NOT NULL,
   content       text         NOT NULL,
-  user_id       int          NOT NULL, -- references user.id
+  user_id       bigint       NOT NULL, -- references user.id
   pub_date      datetime     NOT NULL DEFAULT current_timestamp(),
   last_modified timestamp    NOT NULL DEFAULT current_timestamp() on update current_timestamp(),
   PRIMARY KEY (id),
