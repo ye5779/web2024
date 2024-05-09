@@ -1,7 +1,9 @@
 <!doctype html>
-<html>
+<html th:replace="~{layouts/base::html(main=~{::main})}">
 <body>
-<h1>Form</h1>
-<p>username : <span th:text="${username}"></span></p>
+<main>
+  <h1>Form</h1>
+  <p>username : <span th:text="${param.username}"></span></p>
+</main>
 </body>
 </html>

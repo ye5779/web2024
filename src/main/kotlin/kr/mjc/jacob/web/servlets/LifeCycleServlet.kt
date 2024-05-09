@@ -4,16 +4,15 @@ import jakarta.servlet.annotation.WebServlet
 import jakarta.servlet.http.HttpServlet
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import kr.mjc.jacob.web.webContext
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.thymeleaf.TemplateEngine
-import org.thymeleaf.context.Context
 
 @WebServlet("/servlets/lifecycle")
 class LifeCycleServlet : HttpServlet() {
 
-  @Autowired
-  lateinit var templateEngine: TemplateEngine
+  @Autowired lateinit var templateEngine: TemplateEngine
 
   private val log = LoggerFactory.getLogger(this.javaClass)
 
@@ -24,7 +23,7 @@ class LifeCycleServlet : HttpServlet() {
   override fun doGet(req: HttpServletRequest, resp: HttpServletResponse) {
     log.debug("process request.")
     resp.contentType = "text/html"
-    templateEngine.process("examples/hello", Context(), resp.writer)
+    templateEngine.process("examples/hello", webContext(req, resp), resp.writer)
   }
 
   override fun destroy() {

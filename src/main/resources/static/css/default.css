@@ -1,2 +1,11 @@
 * {font-family:NanumGothicCoding, monospace;}
-p.message {color:orangered;}
+nav {border-bottom:1px solid gray;}
+nav li {display:inline-block;}
+nav a {text-decoration:none;}
+p {margin:5px 0;}
+h2, h3 {margin:10px 0 5px;}
+table {border-collapse:collapse; border-top:1px solid gray; width:100%;}
+th, td {border-bottom:1px solid gray; padding:2px;}
+th {background-color:royalblue; color:white;}
+table.list td:last-of-type {text-align:right;}
+table.info td {text-align:center;}
