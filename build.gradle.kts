@@ -28,7 +28,7 @@ dependencies {
       "org.springframework.boot:spring-boot-configuration-processor")
   runtimeOnly("org.mariadb.jdbc:mariadb-java-client")
 
-  // for PasswordEncoder
+  // for passwordEncoder
   implementation("org.springframework.security:spring-security-core")
 }
 

@@ -3,28 +3,31 @@
 <body>
 <main>
   <h1>User Detail</h1>
-  <table class="info">
+  <table class="info" th:object="${session.user}">
     <tr>
       <th>번호</th>
-      <td th:text="${user.id}"></td>
+      <td th:text="*{id}"></td>
     </tr>
     <tr>
       <th>이메일</th>
-      <td th:text="${user.username}"></td>
+      <td th:text="*{username}"></td>
     </tr>
     <tr>
       <th>이름</th>
-      <td th:text="${user.firstName}"></td>
+      <td th:text="*{firstName}"></td>
     </tr>
     <tr>
       <th>가입일시</th>
-      <td th:text="${user.dateJoinedFormatted}"></td>
+      <td th:text="*{dateJoinedFormatted}"></td>
     </tr>
     <tr>
       <th>최근 로그인</th>
-      <td th:text="${user.lastLoginFormatted}"></td>
+      <td th:text="*{lastLoginFormatted}"></td>
     </tr>
   </table>
+  <form th:action="@{/user/logout}" method="post">
+    <p><button type="submit">Logout</button></p>
+  </form>
 </main>
 </body>
 </html>
