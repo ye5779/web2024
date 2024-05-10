@@ -20,6 +20,7 @@ class UserController(val userRepository: UserRepository,
   companion object {
     private const val PAGE_SIZE: Int = 20
     private val sort = Sort.by("id").descending()
+    private const val LANDING_PAGE = "/user/list"
   }
 
   /** 회원 목록 */
@@ -59,7 +60,7 @@ class UserController(val userRepository: UserRepository,
       }
       userRepository.save(user) // 등록 성공
       req.session.setAttribute("user", user)  // 로그인
-      resp.sendRedirect("${req.contextPath}/user/list")
+      resp.sendRedirect("${req.contextPath}${LANDING_PAGE}")
     } else {  // 이메일 존재. 등록 실패
       resp.sendRedirect("${req.contextPath}/user/signup?error")
     }
@@ -77,7 +78,7 @@ class UserController(val userRepository: UserRepository,
       req.session.setAttribute("user", user)
       user.lastLogin = LocalDateTime.now()
       userRepository.updateLastLogin(user.id, user.lastLogin)
-      resp.sendRedirect("${req.contextPath}/user/list")
+      resp.sendRedirect("${req.contextPath}${LANDING_PAGE}")
     } else {  // 사용자가 없거나 비밀번호가 매치하지 않을 경우
       resp.sendRedirect("${req.contextPath}/user/login?error")
     }
@@ -87,6 +88,6 @@ class UserController(val userRepository: UserRepository,
   @PostMapping("/user/logout")
   fun logout(req: HttpServletRequest, resp: HttpServletResponse) {
     req.session.invalidate()
-    resp.sendRedirect("${req.contextPath}/user/list")
+    resp.sendRedirect("${req.contextPath}${LANDING_PAGE}")
   }
 }
