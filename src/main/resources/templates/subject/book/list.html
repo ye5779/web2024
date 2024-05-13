@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html th:replace="~{layouts/base::html(style=~{::style}, main=~{::main})}">
+<head>
+  <style>
+    input {width:240px;}
+  </style>
+</head>
+<body>
+<main>
+  <h3>Book</h3>
+  <form action="add" method="post">
+    <fieldset>
+      <legend>책 정보</legend>
+      <p><input type="text" name="title" placeholder="제목" required autofocus/>
+      </p>
+      <p><input type="text" name="author" placeholder="글쓴이" required/>
+        <button type="submit">저장</button>
+      </p>
+    </fieldset>
+  </form>
+  <table>
+    <tr>
+      <th>번호</th>
+      <th>제목</th>
+      <th>글쓴이</th>
+    </tr>
+    <tr th:each="movie: ${movies}">
+      <td th:text="${movie.id}"></td>
+      <td th:text="${movie.title}"></td>
+      <td th:text="${movie.author}"></td>
+    </tr>
+  </table>
+</main>
+</body>
+</html>

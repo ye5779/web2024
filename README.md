@@ -1,6 +1,11 @@
-# web2024 (v2024.5.2)
+# web2024 (v2024.5.13)
 
 Kotlin, Spring Boot, Spring Data JPA, Thymeleaf를 사용한 Post Web application
+
+## 변경 내용
+
+- SimpleDispatcher, UserController 추가
+- subject.movie, subject.book 추가
 
 ## 실행 환경
 
@@ -35,7 +40,7 @@ java -jar build/libs/web2024.jar
 
 3. war 파일을 생성해서 WAS에 올림
 ```
-./gradlew bootWar
+./gradlew war
 copy build/libs/web2024.war $TOMCAT_HOME/webapps/
 ```
 

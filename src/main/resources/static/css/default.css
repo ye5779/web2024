@@ -2,7 +2,7 @@
 nav {border-bottom:1px solid gray;}
 nav li {display:inline-block;}
 nav a {text-decoration:none;}
-p {margin:5px 0;}
+p, form {margin:5px 0;}
 p.warn {color:orangered;}
 h2, h3 {margin:10px 0 5px;}
 table {border-collapse:collapse; border-top:1px solid gray; width:100%;}
@@ -12,3 +12,4 @@ table.list td:last-of-type {text-align:right;}
 table.info td {text-align:center;}
 form.login input, form.signup input {width:200px;}
 button, input {padding:2px; font-size:1em;}
+ul {list-style-type:none;}
