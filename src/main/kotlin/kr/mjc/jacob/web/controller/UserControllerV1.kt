@@ -13,9 +13,10 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import java.time.LocalDateTime
 
+/** 서블릿 API를 사용하는 컨트롤러 */
 @Controller
-class UserController(val userRepository: UserRepository,
-                     val passwordEncoder: PasswordEncoder) {
+class UserControllerV1(val userRepository: UserRepository,
+                       val passwordEncoder: PasswordEncoder) {
 
   companion object {
     private const val PAGE_SIZE: Int = 20
