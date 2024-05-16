@@ -2,7 +2,8 @@
 <html th:replace="~{layouts/base::html(main=~{::main})}">
 <body>
 <main>
-  <h1>User List</h1>
+  <h2>User List</h2>
+  <p th:replace="~{layouts/pagenation::p}"></p>
   <table class="list">
     <tr>
       <th>번호</th>
@@ -10,7 +11,7 @@
       <th>이름</th>
       <th>가입일시</th>
     </tr>
-    <tr th:each="user: ${users}">
+    <tr th:each="user: ${list}">
       <td th:text="${user.id}">번호</td>
       <td><a th:href="@{detail(id=${user.id})}"><span
           th:text="${user.username}">이메일</span></a></td>

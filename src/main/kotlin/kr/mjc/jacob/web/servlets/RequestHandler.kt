@@ -15,7 +15,7 @@ class RequestHandler(private val userRepository: UserRepository) {
   fun userList(req: HttpServletRequest, context: WebContext) {
     val page = req.getParameter("page")?.toInt() ?: 0
     val users = userRepository.findAll(PageRequest.of(page, 20, sort))
-    context.setVariable("users", users)
+    context.setVariable("list", users)
   }
 
   fun userDetail(req: HttpServletRequest, context: WebContext) {

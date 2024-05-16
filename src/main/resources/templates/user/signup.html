@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html th:replace="~{layouts/base::html(main=~{::main})}">
 <body>
-<main>
-  <h1>Sign Up</h1>
-  <form method="post" class="signup">
-    <p><input type="email" name="username" placeholder="이메일" required
-        autofocus/></p>
-    <p><input type="password" name="password" placeholder="비밀번호" required/></p>
-    <p><input type="text" name="firstName" placeholder="이름" required/></p>
+<main class="form">
+  <h2>Sign Up</h2>
+  <form method="post">
+    <p><input type="email" name="username" placeholder="이메일" class="fill"
+        required autofocus/></p>
+    <p><input type="password" name="password" placeholder="비밀번호" class="fill"
+        required/></p>
+    <p><input type="text" name="firstName" placeholder="이름" class="fill"
+        required/></p>
     <p>
       <button type="submit">가입</button>
     </p>

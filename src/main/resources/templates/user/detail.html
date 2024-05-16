@@ -2,7 +2,8 @@
 <html th:replace="~{layouts/base::html(main=~{::main})}">
 <body>
 <main>
-  <h1>User Detail</h1>
+  <h2>User Detail</h2>
+  <p><a th:href="@{/user/list(page=${session.page})}">목록</a></p>
   <table class="info">
     <tr>
       <th>번호</th>
