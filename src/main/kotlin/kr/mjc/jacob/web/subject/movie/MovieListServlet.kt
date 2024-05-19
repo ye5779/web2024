@@ -10,7 +10,7 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.thymeleaf.TemplateEngine
 
-@WebServlet("/subject/movie/list")
+@WebServlet("/servlets/movie/list")
 class MovieListServlet : HttpServlet() {
 
   @Autowired lateinit var movieRepository: MovieRepository

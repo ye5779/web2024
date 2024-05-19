@@ -10,16 +10,16 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.thymeleaf.TemplateEngine
 
-@WebServlet("/subject/book/list")
+@WebServlet("/servlets/book/list")
 class BookListServlet : HttpServlet() {
 
-  @Autowired lateinit var movieRepository: BookRepository
+  @Autowired lateinit var bookRepository: BookRepository
   @Autowired lateinit var templateEngine: TemplateEngine
 
   override fun doGet(req: HttpServletRequest, resp: HttpServletResponse) {
-    val movies = movieRepository.findAll(
-        PageRequest.of(0, 100, Sort.by("id").descending()))
-    val context = webContext(req, resp).apply { setVariable("movies", movies) }
+    val books =
+      bookRepository.findAll(PageRequest.of(0, 100, Sort.by("id").descending()))
+    val context = webContext(req, resp).apply { setVariable("books", books) }
 
     resp.contentType = "text/html"
     templateEngine.process("subject/book/list", context, resp.writer)

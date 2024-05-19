@@ -19,10 +19,10 @@
       <th>제목</th>
       <th>글쓴이</th>
     </tr>
-    <tr th:each="movie: ${movies}">
-      <td th:text="${movie.id}"></td>
-      <td th:text="${movie.title}"></td>
-      <td th:text="${movie.author}"></td>
+    <tr th:each="book: ${books}">
+      <td th:text="${book.id}"></td>
+      <td th:text="${book.title}"></td>
+      <td th:text="${book.author}"></td>
     </tr>
   </table>
 </main>

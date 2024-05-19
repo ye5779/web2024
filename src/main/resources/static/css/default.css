@@ -5,7 +5,7 @@ a {text-decoration:none;}
 p, form {margin:5px 0;}
 p.warn {color:orangered;}
 p.title {font-weight:bold;}
-.content {white-space:pre-line;}
+.pre-line {white-space:pre-line;}
 h3 {margin:10px 0 5px;}
 table {border-collapse:collapse; border-top:1px solid gray; width:100%;}
 table.list td:last-of-type {text-align:right;}
@@ -19,7 +19,6 @@ button, input, textarea {padding:2px; font-size:1em;}
 textarea {height:300px;}
 ul {list-style-type:none;}
 ol, ul {padding-left:24px;}
-div.header {border-top:1px solid gray; border-bottom:1px solid gray;}
+.content-header {border-top:1px solid gray; border-bottom:1px solid gray;}
 main.form {width:240px; margin:auto;}
 .pagenation {text-align:center;}
-.pagenation span.arrow {display:inline-block; width:75px;}

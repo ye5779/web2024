@@ -1,8 +1,7 @@
 <p class="pagenation">
-  <span class="arrow"><a th:if="${not list.isFirst}"
-      href="?page=0">[&lt;&lt;]</a><a th:if="${not list.isFirst}"
-      th:href="|?page=${list.number - 1}|">[&lt;]</a></span>
+  <span><a th:if="${not list.isFirst}" href="?page=0">[First]</a><a
+      th:if="${not list.isFirst}"
+      th:href="|?page=${list.number - 1}|">[Prev]</a></span>
   <span th:text="|Page: ${list.number}|"></span>
-  <span class="arrow"><a th:if="${not list.isLast}"
-      th:href="|?page=${list.number + 1}|">[&gt;]</a></span>
+  <span><a th:if="${not list.isLast}" th:href="|?page=${list.number + 1}|">[Next]</a></span>
 </p>

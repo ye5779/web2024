@@ -6,17 +6,17 @@ import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.beans.factory.annotation.Autowired
 
-@WebServlet("/subject/book/add")
+@WebServlet("/servlets/book/add")
 class AddBookServlet : HttpServlet() {
 
-  @Autowired lateinit var movieRepository: BookRepository
+  @Autowired lateinit var bookRepository: BookRepository
 
   override fun doPost(req: HttpServletRequest, resp: HttpServletResponse) {
     val book = Book().apply {
       title = req.getParameter("title")
       author = req.getParameter("author")
     }
-    movieRepository.save(book)
+    bookRepository.save(book)
     resp.sendRedirect("${req.contextPath}/subject/book/list")
   }
 }

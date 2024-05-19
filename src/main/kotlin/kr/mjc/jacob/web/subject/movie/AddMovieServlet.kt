@@ -6,7 +6,7 @@ import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.beans.factory.annotation.Autowired
 
-@WebServlet("/subject/movie/add")
+@WebServlet("/servlets/movie/add")
 class AddMovieServlet : HttpServlet() {
 
   @Autowired lateinit var movieRepository: MovieRepository
