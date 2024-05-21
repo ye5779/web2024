@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 
 @Controller
-class MovieController(val movieRepository: MovieRepository) {
+class MovieControllerV1(val movieRepository: MovieRepository) {
 
   val sort = Sort.by("id").descending()
 
