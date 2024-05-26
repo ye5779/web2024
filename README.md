@@ -4,6 +4,7 @@ Kotlin, Spring Boot, Spring Data JPA, Thymeleaf를 사용한 Post Web applicatio
 
 ## 변경 내용
 
+- Handler methods examples 추가
 - UserControllerV2 추가 : Servlet API를 사용하지 않는 핸들러 메서드
 
 ## 실행 환경
