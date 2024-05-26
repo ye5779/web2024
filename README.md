@@ -1,10 +1,10 @@
-# web2024 (v2024.5.19)
+# web2024 (v2024.5.26)
 
 Kotlin, Spring Boot, Spring Data JPA, Thymeleaf를 사용한 Post Web application
 
 ## 변경 내용
 
-- MovieControllerV1, BookControllerV1 추가
+- UserControllerV2 추가 : Servlet API를 사용하지 않는 핸들러 메서드
 
 ## 실행 환경
 
