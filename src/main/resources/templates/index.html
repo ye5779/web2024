@@ -1,48 +1,59 @@
 <!DOCTYPE html>
-<html th:replace="~{layouts/base::html(main=~{::main})}">
+<html th:replace="~{layouts/base::html(main=~{::main}, style=~{::style})}">
+<head>
+  <style>
+    .flex-container {display:flex;}
+    .column {width:50%;}
+  </style>
+</head>
 <body>
 <main>
   <h2>Hello World</h2>
-  <ol>
-    <li><h3>Servlet examples</h3>
-      <p><a href="servlets/hello">Hello Servlet</a></p>
-      <p><a href="servlets/template">Hello Template</a></p>
-    </li>
-    <li>
-      <h3>Http Methods</h3>
-      <p>Get:</p>
-      <form method="get" action="servlets/form">
-        <input type="text" name="username"/>
-        <button type="submit">보내기</button>
-      </form>
-      <p>Post:</p>
-      <form method="post" action="servlets/form">
-        <input type="text" name="username"/>
-        <button type="submit">보내기</button>
-      </form>
-    </li>
-    <li><h3>Forward and Redirect</h3>
-      <p><a href="servlets/forward">servlets/forward</a></p>
-      <p><a href="servlets/redirect">servlets/redirect</a></p>
-    </li>
-    <li><h3>Servlet Life Cycle</h3>
-      <p><a href="servlets/lifecycle">servlets/lifecycle</a></p>
-    </li>
-    <li><h3>Scope objects</h3>
-      <p><a href="servlets/first">servlets/first</a></p>
-      <p><a href="servlets/second">servlets/second</a></p>
-    </li>
-    <li><h3>과제</h3>
-      <p><a href="subject/movie/list">subject/movie/list</a></p>
-      <p><a href="subject/book/list">subject/book/list</a></p>
-    </li>
-    <li><h3>Simple dispatcher</h3>
-      <p><a href="mvc/user/list">mvc/user/list</a></p>
-    </li>
-    <li><h3>Handler methods examples</h3>
-      <p><a href="handler-methods/">handler-methods/</a></p>
-    </li>
-  </ol>
+  <div class="flex-container">
+    <ol class="column">
+      <li><h3>Servlet examples</h3>
+        <p><a href="servlets/hello">Hello Servlet</a></p>
+        <p><a href="servlets/template">Hello Template</a></p>
+      </li>
+      <li>
+        <h3>Http Methods</h3>
+        <p>Get:</p>
+        <form method="get" action="servlets/form">
+          <input type="text" name="username"/>
+          <button type="submit">보내기</button>
+        </form>
+        <p>Post:</p>
+        <form method="post" action="servlets/form">
+          <input type="text" name="username"/>
+          <button type="submit">보내기</button>
+        </form>
+      </li>
+      <li><h3>Forward and Redirect</h3>
+        <p><a href="servlets/forward">servlets/forward</a></p>
+        <p><a href="servlets/redirect">servlets/redirect</a></p>
+      </li>
+      <li><h3>Servlet Life Cycle</h3>
+        <p><a href="servlets/lifecycle">servlets/lifecycle</a></p>
+      </li>
+    </ol>
+    <ol start="5" class="column">
+      <li><h3>Scope objects</h3>
+        <p><a href="servlets/first">servlets/first</a></p>
+        <p><a href="servlets/second">servlets/second</a></p>
+      </li>
+      <li><h3>과제</h3>
+        <p><a href="subject/movie/list">subject/movie/list</a></p>
+        <p><a href="subject/book/list">subject/book/list</a></p>
+      </li>
+      <li><h3>Simple dispatcher</h3>
+        <p><a href="mvc/user/list">mvc/user/list</a></p>
+      </li>
+      <li><h3>Handler methods examples</h3>
+        <p><a href="handler-methods/">handler-methods/</a></p>
+        <p><a href="handler-methods/rest">handler-methods/rest</a></p>
+      </li>
+    </ol>
+  </div>
 </main>
 </body>
 </html>

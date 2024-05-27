@@ -1,0 +1,44 @@
+<!doctype html>
+<html th:replace="~{layouts/base::html(main=~{::main}, style=~{::style})}">
+<head>
+  <style>
+    .list {display:grid; grid-template-columns: repeat(3, auto); border-top:1px solid gray;}
+    .list div {border-bottom:1px solid gray;}
+  </style>
+</head>
+<body>
+<main>
+  <h1>Rest API examples</h1>
+  <p><a
+      th:href="@{/handler-methods/list(page=0)}">/handler-methods/list?page=0</a>
+  </p>
+  <p><a
+      th:href="@{/handler-methods/get(id=361)}">/handler-methods/get?id=361</a>
+  </p>
+  <p>
+    <button id="btn1">목록 가져오기</button>
+    <button id="btn2">목록 지우기</button>
+  </p>
+  <div id="list1" class="list"></div>
+  <script th:inline="javascript">
+    // 목록 가져오기
+    document.querySelector("#btn1").addEventListener('click', function () {
+      const url = /*[[@{/handler-methods/list(page=0)}]]*/ '';
+      let html = ''
+      fetch(url).then(response => response.json()).then(page => {
+        page.content.forEach(entry => {
+          html +=
+            `<div>${entry.id}</div><div>${entry.username}</div><div>${entry.firstName}</div>`
+        })
+        document.querySelector("#list1").innerHTML = html
+      })
+    })
+
+    // 목록 지우기
+    document.querySelector("#btn2").addEventListener('click', function () {
+      document.querySelector("#list1").innerHTML = ''
+    })
+  </script>
+</main>
+</body>
+</html>

@@ -16,6 +16,7 @@ class ExampleController(val userRepository: UserRepository) {
     return "handler-methods/index" // /templates/handler-methods/index.html
   }
 
+  /** request.getParameter() */
   @PostMapping("/handler-methods/request")
   fun request(request: HttpServletRequest): String {
     val username = request.getParameter("username")
@@ -26,6 +27,7 @@ class ExampleController(val userRepository: UserRepository) {
     return "handler-methods/user" // /templates/handler-methods/user.html
   }
 
+  /** @RequestParam */
   @PostMapping("/handler-methods/requestParam")
   fun requestParam(@RequestParam("username") username: String,
                    @RequestParam("password") password: String,
@@ -35,6 +37,7 @@ class ExampleController(val userRepository: UserRepository) {
     return "handler-methods/user"
   }
 
+  /** @ModelAttribute */
   @PostMapping("/handler-methods/modelAttribute")
   fun modelAttribute(@ModelAttribute("user") user: User): String {
     user.apply { dateJoined = LocalDateTime.now(); lastLogin = dateJoined }
@@ -47,6 +50,7 @@ class ExampleController(val userRepository: UserRepository) {
     // /templates/handler-methods/profile.html
   }
 
+  /** HttpSession */
   @PostMapping("/handler-methods/login")
   fun login(session: HttpSession, username: String): String {
     val user = userRepository.findByUsername(username)
@@ -54,12 +58,14 @@ class ExampleController(val userRepository: UserRepository) {
     return "redirect:/handler-methods/profile"
   }
 
+  /** session.invalidate() */
   @PostMapping("/handler-methods/logout")
   fun logout(session: HttpSession): String {
     session.invalidate()
     return "redirect:/handler-methods/"
   }
 
+  /** @SessionAttribute */
   @GetMapping("/handler-methods/sessionAttribute")
   fun sessionAttribute(@SessionAttribute("user") user: User?): String {
     println("@SessionAttribute: $user")

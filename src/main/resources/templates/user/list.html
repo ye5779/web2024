@@ -13,7 +13,7 @@
     </tr>
     <tr th:each="user: ${list}">
       <td th:text="${user.id}">번호</td>
-      <td><a th:href="@{detail(id=${user.id})}"><span
+      <td><a th:href="@{/user/detail(id=${user.id})}"><span
           th:text="${user.username}">이메일</span></a></td>
       <td th:text="${user.firstName}">이름</td>
       <td th:text="${user.dateJoinedFormatted}">가입일시</td>
