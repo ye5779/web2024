@@ -12,7 +12,7 @@ import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDateTime
 
-/** Servlet API를 사용하지 않는 컨트롤러 */
+/** Servlet API를 사용하지 않는 핸들러 메서드들 */
 @Controller
 class UserControllerV2(val userRepository: UserRepository,
                        val passwordEncoder: PasswordEncoder) {

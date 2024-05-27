@@ -1,22 +1,23 @@
 package kr.mjc.jacob.web.controller
 
-import jakarta.servlet.http.HttpServletRequest
-import jakarta.servlet.http.HttpServletResponse
+import jakarta.servlet.http.HttpSession
 import kr.mjc.jacob.web.repository.Post
 import kr.mjc.jacob.web.repository.PostRepository
 import kr.mjc.jacob.web.repository.User
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Slice
 import org.springframework.http.HttpStatus
+import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.SessionAttribute
 import org.springframework.web.server.ResponseStatusException
 import java.time.LocalDateTime
 
-/** Servlet API를 사용하는 핸들러 메서드들 */
-//@Controller
-class PostControllerV1(val postRepository: PostRepository) {
+/** Servlet API를 사용하지 않는 핸들러 메서드들 */
+@Controller
+class PostControllerV2(val postRepository: PostRepository) {
 
   companion object {
     private const val PAGE_SIZE = 20
@@ -24,10 +25,8 @@ class PostControllerV1(val postRepository: PostRepository) {
 
   /** 글목록 */
   @GetMapping("/post/list")
-  fun list(req: HttpServletRequest, model: Model) {
-    val page = req.getParameter("page")?.toInt() ?: 0
-    req.session.setAttribute("page", page) // 현재 페이지를 세션에 저장
-
+  fun list(page: Int = 0, session: HttpSession, model: Model) {
+    session.setAttribute("page", page) // 현재 페이지를 세션에 저장
     val posts: Slice<Post> =
       postRepository.findAllByOrderByIdDesc(PageRequest.of(page, PAGE_SIZE))
     model.addAttribute("list", posts)
@@ -40,64 +39,45 @@ class PostControllerV1(val postRepository: PostRepository) {
 
   /** 글쓰기 */
   @PostMapping("/post/create")
-  fun create(req: HttpServletRequest, resp: HttpServletResponse) {
-    val user = req.session.getAttribute("user") as User
-    val post = Post().apply {
+  fun create(post: Post, @SessionAttribute user: User): String {
+    post.apply {
       this.user = user
-      title = req.getParameter("title")
-      content = req.getParameter("content")
       pubDate = LocalDateTime.now()
       lastModified = pubDate
     }
     postRepository.save(post)
-    resp.sendRedirect("${req.contextPath}/post/list")
+    return "redirect:/post/list"
   }
 
   /** 글보기 */
   @GetMapping("/post/detail")
-  fun detail(req: HttpServletRequest, model: Model) {
-    val id = req.getParameter("id").toLong()
+  fun detail(id: Long, model: Model) {
     val post: Post = postRepository.findById(id).orElseThrow()
     model.addAttribute("post", post)
   }
 
   /** 글수정 화면 */
   @GetMapping("/post/update")
-  fun update(req: HttpServletRequest, model: Model) {
-    val id = req.getParameter("id").toLong()
-    val user = req.session.getAttribute("user") as User
-
+  fun update(id: Long, @SessionAttribute user: User, model: Model) {
     val post = checkPost(id, user.id)
     model.addAttribute("post", post)
   }
 
   /** 글수정 */
   @PostMapping("/post/update")
-  fun update(req: HttpServletRequest, resp: HttpServletResponse) {
-    val id = req.getParameter("id").toLong()
-    val user = req.session.getAttribute("user") as User
-    // 테이블에서 글의 정보를 가져와서 수정할 프라퍼티만 적용하고 다시 저장
-    val post = checkPost(id, user.id)
-    post.apply {
-      post.title = req.getParameter("title")
-      post.content = req.getParameter("content")
-      post.lastModified = LocalDateTime.now()
-    }
-    postRepository.save(post)
-    resp.sendRedirect("${req.contextPath}/post/detail?id=${post.id}")
+  fun update(post: Post, @SessionAttribute user: User): String {
+    checkPost(post.id, user.id)
+    postRepository.update(post)
+    return "redirect:/post/detail?id=${post.id}"
   }
 
   /** 글삭제 */
   @PostMapping("/post/delete")
-  fun delete(req: HttpServletRequest, resp: HttpServletResponse) {
-    val id = req.getParameter("id").toLong()
-    val session = req.session
-    val user = session.getAttribute("user") as User
-
+  fun delete(id: Long, @SessionAttribute user: User,
+             @SessionAttribute page: Int): String {
     checkPost(id, user.id)
     postRepository.deleteById(id)
-    resp.sendRedirect(
-        "${req.contextPath}/post/list?page=${session.getAttribute("page")}")
+    return "redirect:/post/list?page=$page"
   }
 
   /** 게시글의 권한 체크

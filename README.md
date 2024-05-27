@@ -1,20 +1,22 @@
-# web2024 (v2024.5.26)
+# web2024 (v2024.5.27)
 
 Kotlin, Spring Boot, Spring Data JPA, Thymeleaf를 사용한 Post Web application
 
 ## 변경 내용
 
-- Handler methods examples 추가
-- UserControllerV2 추가 : Servlet API를 사용하지 않는 핸들러 메서드
+### v2024.5.27
+- UserControllerV2 추가 : Servlet API를 사용하지 않는 핸들러 메서드들
+- PostControllerV2 추가 : Servlet API를 사용하지 않는 핸들러 메서드들
+- ExampleController, ExampleRestController 추가 : Handler methods 예문들
 
 ## 실행 환경
 
 1. Java 17 이상
 2. MariaDB 10.x 이상
-3. Kotlin 1.9.x
-4. Spring Boot 3.2.x
-5. Spring Data JPA 3.2.x
-6. Thymeleaf 3.x
+3. Kotlin 1.9.x 이상
+4. Spring Boot 3.2.x 이상
+5. Spring Data JPA 3.2.x  이상
+6. Thymeleaf 3.1.x 이상
 
 ## 설치 방법
 

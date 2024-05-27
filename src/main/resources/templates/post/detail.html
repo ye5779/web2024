@@ -10,15 +10,17 @@
     </p>
     <input type="hidden" name="id" th:value="${post.id}"/>
   </form>
-  <div class="content-header">
-    <p th:text="|${post.id}. ${post.title}|" class="title"></p>
-    <p>등록시간: <span th:text="${post.pubDateFormatted}"></span>,
-      수정시간: <span th:text="${post.lastModifiedFormatted}"></span>,
-      글쓴이: <a th:href="@{/user/detail(id=${post.user.id})}"
-          th:text="${post.user.firstName}"></a>
-    </p>
+  <div class="content">
+    <div class="content-header">
+      <p th:text="|${post.id}. ${post.title}|" class="title"></p>
+      <p>등록시간: <span th:text="${post.pubDateFormatted}"></span>,
+        수정시간: <span th:text="${post.lastModifiedFormatted}"></span>,
+        글쓴이: <a th:href="@{/user/detail(id=${post.user.id})}"
+            th:text="${post.user.firstName}"></a>
+      </p>
+    </div>
+    <p th:text="${post.content}" class="pre-line"></p>
   </div>
-  <p th:text="${post.content}" class="pre-line"></p>
   <script>
     document.forms[0].addEventListener('submit', function (event) {
       if (!confirm("삭제하시겠습니까?")) event.preventDefault()

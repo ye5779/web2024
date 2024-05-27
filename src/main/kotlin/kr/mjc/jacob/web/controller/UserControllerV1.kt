@@ -8,13 +8,12 @@ import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.security.crypto.password.PasswordEncoder
-import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import java.time.LocalDateTime
 
-/** Servlet API를 사용하는 컨트롤러 */
+/** Servlet API를 사용하는 핸들러 메서드들 */
 //@Controller
 class UserControllerV1(val userRepository: UserRepository,
                        val passwordEncoder: PasswordEncoder) {
@@ -64,7 +63,7 @@ class UserControllerV1(val userRepository: UserRepository,
       }
       userRepository.save(user) // 등록 성공
       req.session.setAttribute("user", user)  // 로그인
-      resp.sendRedirect("${req.contextPath}${LANDING_PAGE}")
+      resp.sendRedirect("${req.contextPath}$LANDING_PAGE")
     } else {  // 이메일 존재. 등록 실패
       resp.sendRedirect("${req.contextPath}/user/signup?error")
     }
@@ -82,7 +81,7 @@ class UserControllerV1(val userRepository: UserRepository,
       req.session.setAttribute("user", user)
       user.lastLogin = LocalDateTime.now()
       userRepository.updateLastLogin(user.id, user.lastLogin)
-      resp.sendRedirect("${req.contextPath}${LANDING_PAGE}")
+      resp.sendRedirect("${req.contextPath}$LANDING_PAGE")
     } else {  // 사용자가 없거나 비밀번호가 매치하지 않을 경우
       resp.sendRedirect("${req.contextPath}/user/login?error")
     }
@@ -92,7 +91,7 @@ class UserControllerV1(val userRepository: UserRepository,
   @PostMapping("/user/logout")
   fun logout(req: HttpServletRequest, resp: HttpServletResponse) {
     req.session.invalidate()
-    resp.sendRedirect("${req.contextPath}${LANDING_PAGE}")
+    resp.sendRedirect("${req.contextPath}$LANDING_PAGE")
   }
 
   /** 해지 */
@@ -101,11 +100,10 @@ class UserControllerV1(val userRepository: UserRepository,
     val user = req.session.getAttribute("user") as User
     try {
       userRepository.deleteById(user.id)
+      logout(req, resp)
     } catch (e: DataIntegrityViolationException) {
       throw DataIntegrityViolationException(
           "등록한 글들이 있어서 해지할 수 없습니다.\n글들을 먼저 삭제하세요.")
     }
-
-    logout(req, resp)
   }
 }
