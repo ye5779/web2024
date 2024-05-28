@@ -54,9 +54,7 @@ class ExampleController(val userRepository: UserRepository) {
       this.password = password
       this.firstName = firstName
     }
-    val modelAndView = ModelAndView("handler-methods/user")
-    modelAndView.addObject("user", user)
-    return modelAndView
+    return ModelAndView("handler-methods/user").addObject("user", user)
   }
 
   /** @ModelAttribute */
@@ -65,8 +63,10 @@ class ExampleController(val userRepository: UserRepository) {
     return "handler-methods/user"
   }
 
+  /** @SessionAttribute */
   @GetMapping("/handler-methods/profile")
-  fun profile() {
+  fun profile(@SessionAttribute("user") user: User?) {
+    println("@SessionAttribute: $user")
     // /templates/handler-methods/profile.html
   }
 
@@ -83,12 +83,5 @@ class ExampleController(val userRepository: UserRepository) {
   fun logout(session: HttpSession): String {
     session.invalidate()
     return "redirect:/handler-methods/"
-  }
-
-  /** @SessionAttribute */
-  @GetMapping("/handler-methods/sessionAttribute")
-  fun sessionAttribute(@SessionAttribute("user") user: User?): String {
-    println("@SessionAttribute: $user")
-    return "handler-methods/profile" // /templates/handler-methods/profile.html
   }
 }
