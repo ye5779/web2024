@@ -23,22 +23,25 @@
   <form id="form3" th:action="@{/handler-methods/requestParam}" method="post">
     <button type="submit">/handler-methods/requestParam 으로 보내기</button>
   </form>
-  <form id="form4" th:action="@{/handler-methods/modelAttribute}" method="post">
+  <form id="form4" th:action="@{/handler-methods/modelAndView}" method="post">
+    <button type="submit">/handler-methods/modelAndView 로 보내기</button>
+  </form>
+  <form id="form5" th:action="@{/handler-methods/modelAttribute}" method="post">
     <button type="submit">/handler-methods/modelAttribute 로 보내기</button>
   </form>
 
   <h3>HttpSession test</h3>
-  <form id="form5" th:action="@{/handler-methods/login}" method="post">
+  <form id="form6" th:action="@{/handler-methods/login}" method="post">
     <button type="submit">/handler-methods/login 으로 보내기</button>
   </form>
-  <form id="form6" th:action="@{/handler-methods/logout}" method="post">
+  <p><a th:href="@{/handler-methods/profile}">/handler-methods/profile</a>
+  </p>
+  <form id="form7" th:action="@{/handler-methods/logout}" method="post">
     <button type="submit">/handler-methods/logout 으로 보내기</button>
   </form>
-  <p><a th:href="@{/handler-methods/sessionAttribute}">/handler-methods/sessionAttribute</a>
-  </p>
   <script th:inline="javascript">
     // form1의 엘리먼트들의 form attribute 값을 설정
-    document.querySelectorAll("#form2, #form3, #form4, #form5")
+    document.querySelectorAll("#form2, #form3, #form4, #form5, #form6")
       .forEach(form => form.addEventListener('submit', function () {
         document.querySelectorAll("#form1 input")
           .forEach(element => element.setAttribute("form", form.id))
