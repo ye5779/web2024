@@ -59,7 +59,7 @@ class UserControllerV1(val userRepository: UserRepository,
         password = passwordEncoder.encode(req.getParameter("password"))
         firstName = req.getParameter("firstName")
         dateJoined = LocalDateTime.now()
-        lastLogin = LocalDateTime.now()
+        lastLogin = dateJoined
       }
       userRepository.save(user) // 등록 성공
       req.session.setAttribute("user", user)  // 로그인

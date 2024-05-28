@@ -39,7 +39,7 @@ class PostControllerV2(val postRepository: PostRepository) {
 
   /** 글쓰기 */
   @PostMapping("/post/create")
-  fun create(post: Post, @SessionAttribute user: User): String {
+  fun create(post: Post, @SessionAttribute("user") user: User): String {
     post.apply {
       this.user = user
       pubDate = LocalDateTime.now()
@@ -58,14 +58,14 @@ class PostControllerV2(val postRepository: PostRepository) {
 
   /** 글수정 화면 */
   @GetMapping("/post/update")
-  fun update(id: Long, @SessionAttribute user: User, model: Model) {
+  fun update(id: Long, @SessionAttribute("user") user: User, model: Model) {
     val post = checkPost(id, user.id)
     model.addAttribute("post", post)
   }
 
   /** 글수정 */
   @PostMapping("/post/update")
-  fun update(post: Post, @SessionAttribute user: User): String {
+  fun update(post: Post, @SessionAttribute("user") user: User): String {
     checkPost(post.id, user.id)
     postRepository.update(post)
     return "redirect:/post/detail?id=${post.id}"
@@ -73,8 +73,8 @@ class PostControllerV2(val postRepository: PostRepository) {
 
   /** 글삭제 */
   @PostMapping("/post/delete")
-  fun delete(id: Long, @SessionAttribute user: User,
-             @SessionAttribute page: Int): String {
+  fun delete(id: Long, @SessionAttribute("user") user: User,
+             @SessionAttribute("page") page: Int): String {
     checkPost(id, user.id)
     postRepository.deleteById(id)
     return "redirect:/post/list?page=$page"
@@ -86,7 +86,8 @@ class PostControllerV2(val postRepository: PostRepository) {
   private fun checkPost(id: Long, userId: Long): Post {
     val post = postRepository.findById(id).orElseThrow()
     if (userId != post.user.id) throw ResponseStatusException(
-        HttpStatus.UNAUTHORIZED, "권한이 없습니다.")  // 401
+      HttpStatus.UNAUTHORIZED, "권한이 없습니다."
+    )  // 401
     return post
   }
 }

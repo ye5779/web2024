@@ -4,18 +4,18 @@ import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
-import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 
-@Controller
+/** Servlet API를 사용하는 핸들러 메서드들 */
+//@Controller
 class MovieControllerV1(val movieRepository: MovieRepository) {
 
-  val sort = Sort.by("id").descending()
+  private val sort = Sort.by("id").descending()
 
   @GetMapping("/subject/movie/list")
-  fun list(req: HttpServletRequest, model: Model) {
+  fun list(model: Model) {
     val movies = movieRepository.findAll(PageRequest.of(0, 100, sort))
     model.addAttribute("movies", movies)
   }

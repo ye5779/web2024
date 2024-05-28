@@ -6,9 +6,7 @@ import kr.mjc.jacob.web.repository.User
 import kr.mjc.jacob.web.repository.UserRepository
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.SessionAttribute
+import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.ModelAndView
 
 @Controller
@@ -34,7 +32,10 @@ class ExampleController(val userRepository: UserRepository) {
   /** @RequestParam */
   @PostMapping("/handler-methods/requestParam")
   fun requestParam(
-    username: String, password: String, firstName: String, model: Model
+    @RequestParam("username") username: String,
+    @RequestParam("password") password: String,
+    @RequestParam("firstName") firstName: String,
+    model: Model
   ): String {
     val user = User().apply {
       this.username = username
@@ -45,9 +46,12 @@ class ExampleController(val userRepository: UserRepository) {
     return "handler-methods/user"
   }
 
+  /** return type: ModelAndView */
   @PostMapping("/handler-methods/modelAndView")
   fun modelAndView(
-    username: String, password: String, firstName: String
+    @RequestParam("username") username: String,
+    @RequestParam("password") password: String,
+    @RequestParam("firstName") firstName: String,
   ): ModelAndView {
     val user = User().apply {
       this.username = username
@@ -59,7 +63,7 @@ class ExampleController(val userRepository: UserRepository) {
 
   /** @ModelAttribute */
   @PostMapping("/handler-methods/modelAttribute")
-  fun modelAttribute(user: User): String {
+  fun modelAttribute(@ModelAttribute("user") user: User): String {
     return "handler-methods/user"
   }
 

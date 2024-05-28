@@ -18,7 +18,7 @@ val HttpServletRequest.fullUrl: String
 val String.urlEncoded: String
   get() = URLEncoder.encode(this, Charset.defaultCharset())
 
-/** 날짜를 "yyyy-MM-dd HH:mm:ss"로 포맷하는 formatter */
+/** 날짜를 "yyyy-MM-dd HH:mm" 으로 포맷하는 formatter */
 val formatter: DateTimeFormatter =
   DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
 
