@@ -5,9 +5,10 @@ import jakarta.servlet.http.HttpSession
 import kr.mjc.jacob.web.repository.User
 import kr.mjc.jacob.web.repository.UserRepository
 import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.*
 import org.springframework.ui.Model
-import java.time.LocalDateTime
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.SessionAttribute
 import org.springframework.web.servlet.ModelAndView
 
 @Controller
@@ -57,13 +58,13 @@ class ExampleController(val userRepository: UserRepository) {
     modelAndView.addObject("user", user)
     return modelAndView
   }
-  
+
   /** @ModelAttribute */
   @PostMapping("/handler-methods/modelAttribute")
   fun modelAttribute(user: User): String {
     return "handler-methods/user"
   }
-  
+
   @GetMapping("/handler-methods/profile")
   fun profile() {
     // /templates/handler-methods/profile.html
