@@ -18,33 +18,50 @@ class ExampleController(val userRepository: UserRepository) {
 
   /** request.getParameter() */
   @PostMapping("/handler-methods/request")
-  fun request(request: HttpServletRequest): String {
-    val username = request.getParameter("username")
-    val password = request.getParameter("password")
-    val firstName = request.getParameter("firstName")
-    println(
-        "request: username: $username, password: $password, firstName: $firstName")
+  fun request(request: HttpServletRequest, model: Model): String {
+    val user = User().apply {
+      this.username = request.getParameter("username")
+      this.password = request.getParameter("password")
+      this.firstName = request.getParameter("firstName")
+    }
+    model.addAttribute("user", user)
     return "handler-methods/user" // /templates/handler-methods/user.html
   }
 
   /** @RequestParam */
   @PostMapping("/handler-methods/requestParam")
-  fun requestParam(@RequestParam("username") username: String,
-                   @RequestParam("password") password: String,
-                   @RequestParam("firstName") firstName: String): String {
-    println(
-        "requestParam: username: $username, password: $password, firstName: $firstName")
+  fun requestParam(
+    username: String, password: String, firstName: String, model: Model
+  ): String {
+    val user = User().apply {
+      this.username = username
+      this.password = password
+      this.firstName = firstName
+    }
+    model.addAttribute("user", user)
     return "handler-methods/user"
   }
 
+  @PostMapping("/handler-methods/modelAndView")
+  fun modelAndView(
+    username: String, password: String, firstName: String
+  ): ModelAndView {
+    val user = User().apply {
+      this.username = username
+      this.password = password
+      this.firstName = firstName
+    }
+    val modelAndView = ModelAndView("handler-methods/user")
+    modelAndView.addObject("user", user)
+    return modelAndView
+  }
+  
   /** @ModelAttribute */
   @PostMapping("/handler-methods/modelAttribute")
-  fun modelAttribute(@ModelAttribute("user") user: User): String {
-    user.apply { dateJoined = LocalDateTime.now(); lastLogin = dateJoined }
-    println("@ModelAttribute: $user")
+  fun modelAttribute(user: User): String {
     return "handler-methods/user"
   }
-
+  
   @GetMapping("/handler-methods/profile")
   fun profile() {
     // /templates/handler-methods/profile.html
