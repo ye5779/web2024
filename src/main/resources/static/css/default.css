@@ -22,4 +22,6 @@ ol, ul {padding-left:24px;}
 .content {border-bottom:1px solid gray;}
 .content-header {border-top:1px solid gray; border-bottom:1px solid gray;}
 main.form {width:240px; margin:auto;}
-.pagenation {text-align:center;}
+.pagination {text-align:center;}
+.flex-container {display:flex;}
+.flex-column {width:50%;}
