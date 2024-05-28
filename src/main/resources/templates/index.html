@@ -1,16 +1,10 @@
 <!DOCTYPE html>
-<html th:replace="~{layouts/base::html(main=~{::main}, style=~{::style})}">
-<head>
-  <style>
-    .flex-container {display:flex;}
-    .column {width:50%;}
-  </style>
-</head>
+<html th:replace="~{layouts/base::html(main=~{::main})}">
 <body>
 <main>
   <h2>Hello World</h2>
   <div class="flex-container">
-    <ol class="column">
+    <ol class="flex-column">
       <li><h3>Servlet examples</h3>
         <p><a href="servlets/hello">Hello Servlet</a></p>
         <p><a href="servlets/template">Hello Template</a></p>
@@ -36,7 +30,7 @@
         <p><a href="servlets/lifecycle">servlets/lifecycle</a></p>
       </li>
     </ol>
-    <ol start="5" class="column">
+    <ol start="5" class="flex-column">
       <li><h3>Scope objects</h3>
         <p><a href="servlets/first">servlets/first</a></p>
         <p><a href="servlets/second">servlets/second</a></p>
