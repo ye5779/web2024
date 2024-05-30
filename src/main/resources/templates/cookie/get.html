@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html th:replace="~{layouts/base::html(main=~{::main})}">
+<body>
+<main>
+  <h2>Get cookie</h2>
+  <p>이 페이지에서 쿠키를 읽습니다.</p>
+  <table>
+    <tr>
+      <th>Cookie name</th>
+      <th>Cookie value</th>
+    </tr>
+    <tr th:each="entry: ${cookieMap}">
+      <td th:text="${entry.key}"></td>
+      <td th:text="${entry.value}"></td>
+    </tr>
+  </table>
+</main>
+</body>
+</html>

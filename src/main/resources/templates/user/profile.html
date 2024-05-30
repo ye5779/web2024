@@ -31,8 +31,12 @@
       <button type="submit" form="delete">해지</button>
     </p>
   </div>
-  <form id="logout" th:action="@{/user/logout}" method="post"></form>
-  <form id="delete" th:action="@{/user/delete}" method="post"></form>
+  <form id="logout" th:action="@{/user/logout}" method="post">
+    <input type="hidden" name="_csrf" th:value="${session.csrf}"/>
+  </form>
+  <form id="delete" th:action="@{/user/delete}" method="post">
+    <input type="hidden" name="_csrf" th:value="${session.csrf}"/>
+  </form>
   <script>
     document.forms["delete"].addEventListener('submit', function (event) {
       if (!confirm("해지하시겠습니까?")) event.preventDefault()

@@ -9,6 +9,7 @@
       <button type="submit">삭제</button>
     </p>
     <input type="hidden" name="id" th:value="${post.id}"/>
+    <input type="hidden" name="_csrf" th:value="${session.csrf}"/>
   </form>
   <div class="content">
     <div class="content-header">
