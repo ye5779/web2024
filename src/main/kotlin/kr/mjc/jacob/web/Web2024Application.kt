@@ -24,10 +24,12 @@ class Web2024Application : WebMvcConfigurer {
       .addPathPatterns("/post/create", "/post/update", "/post/delete",
                        "/user/profile", "/user/logout", "/user/delete")
 
+    /*
     registry.addInterceptor(csrfInterceptor)
       .addPathPatterns("/user/login", "/user/logout", "/user/signup",
                        "/user/profile", "/post/create", "/post/update",
                        "/post/detail", "/post/delete")
+     */
   }
 
   @Bean

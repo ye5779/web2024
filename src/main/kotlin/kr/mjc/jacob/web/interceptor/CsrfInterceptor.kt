@@ -3,12 +3,11 @@ package kr.mjc.jacob.web.interceptor
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import jakarta.servlet.http.HttpSession
+import kr.mjc.jacob.web.generateRandomString
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Component
 import org.springframework.web.server.ResponseStatusException
 import org.springframework.web.servlet.HandlerInterceptor
-import java.security.SecureRandom
-import java.util.*
 
 /**
  * csrf 토큰을 생성하고 검증하는 인터셉터<br/>
@@ -19,8 +18,6 @@ import java.util.*
 class CsrfInterceptor : HandlerInterceptor {
 
   companion object {
-    private val secureRandom = SecureRandom()
-    private val base64Encoder = Base64.getEncoder()
     private const val CSRF = "csrf"
   }
 
@@ -36,20 +33,10 @@ class CsrfInterceptor : HandlerInterceptor {
       val csrfToken = session.getAttribute(CSRF) as? String
       if (csrfToken != null) {
         session.removeAttribute(CSRF) // 한번 사용한 토큰 삭제
-        val param = req.getParameter("_csrf")
-        if (csrfToken == param) return true
+        val _csrf = req.getParameter("_csrf")
+        if (csrfToken == _csrf) return true
       }
     }
     throw ResponseStatusException(HttpStatus.BAD_REQUEST, "CSRF 에러")
-  }
-
-  /**
-   * 랜덤 문자열 생성
-   * @param length 바이트 수
-   */
-  fun generateRandomString(length: Int): String {
-    val bytes = ByteArray(length)
-    secureRandom.nextBytes(bytes)
-    return base64Encoder.encodeToString(bytes)
   }
 }
