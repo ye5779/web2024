@@ -40,7 +40,7 @@ class CsrfInterceptor : HandlerInterceptor {
         if (csrfToken == param) return true
       }
     }
-    throw ResponseStatusException(HttpStatus.BAD_REQUEST, "잘못된 요청입니다.")
+    throw ResponseStatusException(HttpStatus.BAD_REQUEST, "CSRF 에러")
   }
 
   /**
