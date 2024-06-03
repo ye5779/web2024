@@ -4,6 +4,11 @@ Kotlin, Spring Boot, Spring Data JPA, Thymeleaf를 사용한 Post Web applicatio
 
 ## 변경 내용
 
+### v2024.6.3
+
+- CSRF 필터 추가
+- 쿠키 예문 추가
+
 ### v2024.5.28
 
 - MovieControllerV2 추가
