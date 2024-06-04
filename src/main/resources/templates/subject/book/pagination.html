@@ -1,0 +1,10 @@
+<p class="pagination">
+    <span>
+        <a th:if="${not books.first}" th:href="@{/subject/book/list(page=0)}">[First]</a>
+        <a th:if="${not books.first}" th:href="@{/subject/book/list(page=${books.number - 1})}">Prev]</a>
+    </span>
+    <span th:text="|Page : ${books.number + 1}|"></span>
+    <span>
+        <a th:if="${not books.last}" th:href="@{/subject/book/list(page=${books.number + 1})}">[Next]</a>
+    </span>
+</p>
